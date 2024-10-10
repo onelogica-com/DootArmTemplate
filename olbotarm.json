@@ -369,7 +369,13 @@
         }
     },  
     "variables": {
-        "languageServiceName": "[concat(parameters('botServiceName'), '-lang')]"
+        "languageServiceName": "[concat(parameters('botServiceName'), '-lang')]",
+        "botDisplayName": "[if(empty(parameters('displayName')), parameters('botId'), parameters('displayName'))]",
+        "empty": {},
+        "createManagedIdentity": "[and(equals(parameters('appType'), 'UserAssignedMSI'), empty(parameters('msAppId')))]",
+        "identityResourceName": "[parameters('botId')]",
+        "identityResourceID": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityResourceName'))]",
+        "botTags": "[if(contains(parameters('resourceTags'), 'Microsoft.BotService/botServices'), parameters('resourceTags')['Microsoft.BotService/botServices'], variables('empty'))]"
     },
     "resources": [
         {
