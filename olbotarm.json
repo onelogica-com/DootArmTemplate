@@ -134,7 +134,7 @@
                 "description": "The branch of the GitHub repository to use"
             }
         },
-        "branchbackend":{
+        "branchbackend": {
             "type": "string",
             "defaultValue": "main",
             "metadata": {
@@ -440,7 +440,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]",
-                "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('postgresServerName'))]",
+                "[resourceId('Microsoft.DBforPostgreSQL/flexibleServers', parameters('postgresServerName'))]",
                 "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]"
             ],
             "properties": {
