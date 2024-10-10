@@ -59,7 +59,9 @@
           "name": "S1",
           "capacity": 1
         },
-        "properties": {}
+        "properties": {
+          "reserved": true  // This ensures the app runs on Linux
+        }
       },
       {
         "type": "Microsoft.Web/sites",
@@ -74,7 +76,8 @@
           "siteConfig": {
             "appSettings": "[parameters('appSettings')]"
           }
-        }
+        },
+        "kind": "app,linux"  // Specifies this is a Linux Web App
       },
       {
         "type": "Microsoft.Web/sites/sourcecontrols",
