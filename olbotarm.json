@@ -369,7 +369,7 @@
         }
     },  
     "variables": {
-        "languageServiceName": "[concat(parameters('botServiceName'), '-lang')]",
+        // "languageServiceName": "[concat(parameters('botServiceName'), '-lang')]",
         "botDisplayName": "[if(empty(parameters('displayName')), parameters('botId'), parameters('displayName'))]",
         "empty": {},
         "createManagedIdentity": "[and(equals(parameters('appType'), 'UserAssignedMSI'), empty(parameters('msAppId')))]",
