@@ -70,9 +70,35 @@
                 "description": "The name of the App Service Plan"
             }
         },
+        "HostingPlanSku": {
+            "type": "string",
+            "defaultValue": "B3",
+            "allowedValues": [
+                "B1",
+                "B2",
+                "B3",
+                "D1",
+                "I1",
+                "I1v2",
+                "I2v2",
+                "I3v2",
+                "P1V2",
+                "P1V3",
+                "P2V2",
+                "P2V3",
+                "P3V2",
+                "P3V3",
+                "S1",
+                "S2",
+                "S3"
+            ],
+            "metadata": {
+                "description": "Sku and size of App Service Plan (F1 does not support virtual network integration)"
+            }
+        },
         "postgresServerName": {
             "type": "string",
-           "defaultValue": "[format('{0}-postgresservername', parameters('ResourcePrefix'))]",
+            "defaultValue": "[format('{0}-postgresservername', parameters('ResourcePrefix'))]",
             "metadata": {
                 "description": "The name of the PostgreSQL Flexible Server"
             }
@@ -102,6 +128,13 @@
             }
         },
         "branchforntend": {
+            "type": "string",
+            "defaultValue": "main",
+            "metadata": {
+                "description": "The branch of the GitHub repository to use"
+            }
+        },
+        "branchbackend":{
             "type": "string",
             "defaultValue": "main",
             "metadata": {
@@ -226,6 +259,10 @@
                 "description": "Location for replica database."
             }
         },
+        "skuSizeGB": {
+            "type": "int",
+            "defaultValue": 128
+        },
         "backupRetentionDays": {
             "type": "int",
             "defaultValue": 7,
@@ -241,23 +278,24 @@
             }
         }
     },
-    "msAppId": {
+    "appid": {
         "type": "string",
+        "defaultValue": "123",
         "metadata": {
-          "description": "The Microsoft App ID for the bot (MSA AppId)"
+            "description": "The Microsoft App ID for the bot (MSA AppId)"
         }
-      },
-      "msAppPassword": {
+    },
+    "msAppPassword": {
         "type": "securestring",
+        "defaultValue": "123",
         "metadata": {
-          "description": "The Microsoft App Password for the bot (MSA AppPassword)"
+            "description": "The Microsoft App Password for the bot (MSA AppPassword)"
         }
-      },
+    },
     "variables": {
         "languageServiceName": "[concat(parameters('botServiceName'), '-lang')]"
     },
     "resources": [
-       
         {
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2023-10-01-preview",
@@ -279,24 +317,23 @@
             "dependsOn": [
                 "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]"
             ],
+            "sku": {
+                "name": "GlobalStandard",
+                "capacity": "[parameters('gpt4Capacity')]"
+            },
             "properties": {
                 "model": {
                     "format": "OpenAI",
                     "name": "[parameters('AzureOpenAIGPT4ominiModelName')]",
                     "version": "[parameters('AzureOpenAIGPT4ominiModelVersion')]"
                 },
-                "sku": {
-                    "name": "GlobalStandard",
-                    "capacity": "[parameters('gpt4Capacity')]"
-                },
                 "raiPolicyName": "Microsoft.Default"
-                
             }
         },
         {
             "type": "Microsoft.CognitiveServices/accounts/deployments",
             "apiVersion": "2023-10-01-preview",
-            "name": "[concat(parameters('openAiName'),'/gpt-4o')]",
+            "name": "[concat(parameters('openAiName'), '/gpt-4o')]",
             "dependsOn": [
                 "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]"
             ],
@@ -309,8 +346,7 @@
                     "format": "OpenAI",
                     "name": "[parameters('AzureOpenAIGPT4ModelName')]",
                     "version": "[parameters('AzureOpenAIGPT4ModelVersion')]"
-                
-            },
+                },
                 "raiPolicyName": "Microsoft.Default"
             }
         },
@@ -321,17 +357,20 @@
             "dependsOn": [
                 "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]"
             ],
+            "sku": {
+                "name": "Standard",
+                "capacity": "[parameters('embeddingCapacity')]"
+            },
             "properties": {
                 "model": {
                     "format": "OpenAI",
                     "name": "text-embedding-ada-002",
                     "version": "2"
                 },
-                "raiPolicyName": "Microsoft.Default",
-                "capacity": "[parameters('embeddingCapacity')]"
+                "raiPolicyName": "Microsoft.Default"
             }
         },
-          {
+        {
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2023-10-01-preview",
             "name": "[parameters('TextAnalyticsAccountName')]",
@@ -369,7 +408,7 @@
                 "endpoint": "[concat('https://', parameters('webAppName'), '.azurewebsites.net/api/messages')]",
                 "displayName": "[parameters('botServiceName')]",
                 "description": "Bot created from ARM template",
-                "msaAppId": "[parameters('msAppId')]",
+                "msaAppId": "[parameters('appid')]",
                 "msaAppPassword": "[parameters('msAppPassword')]",
                 "developerAppInsightKey": "",
                 "developerAppInsightApiKey": "",
@@ -382,12 +421,12 @@
             "name": "[parameters('appServicePlanName')]",
             "location": "[parameters('location')]",
             "sku": {
-                "name": "S1",
-                "tier": "Standard",
-                "size": "S1",
-                "family": "S",
-                "capacity": 1
-            }
+                "name": "[parameters('HostingPlanSku')]"
+            },
+            "properties": {
+                "reserved": true
+            },
+            "kind": "linux"
         },
         {
             "type": "Microsoft.Web/sites",
@@ -443,13 +482,13 @@
                         },
                         {
                             "name": "MicrosoftAppId",
-                            "value": "[parameters('msAppId')]"
-                          },
-                          {
+                            "value": "[parameters('appid')]"
+                        },
+                        {
                             "name": "MicrosoftAppPassword",
                             "value": "[parameters('msAppPassword')]"
-                          },
-                          {
+                        },
+                        {
                             "name": "API_Version",
                             "value": ""
                         },
@@ -474,14 +513,14 @@
                     ],
                     "properties": {
                         "repoUrl": "[parameters('repositoryUrl')]",
-                        "branch": "[parameters('branch')]",
+                        "branch": "[parameters('branchbackend')]",
                         "isManualIntegration": false,
                         "deploymentRollbackEnabled": true,
                         "isMercurial": false
                     }
                 }
             ]
-        },  
+        },
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2022-09-01",
@@ -508,12 +547,12 @@
                         },
                         {
                             "name": "MicrosoftAppId",
-                            "value": "[parameters('msAppId')]"
-                          },
-                          {
+                            "value": "[parameters('appid')]"
+                        },
+                        {
                             "name": "MicrosoftAppPassword",
                             "value": "[parameters('msAppPassword')]"
-                          }
+                        }
                     ]
                 }
             },
@@ -534,7 +573,7 @@
                     }
                 }
             ]
-        }, 
+        },
         {
             "type": "Microsoft.DBforPostgreSQL/flexibleServers",
             "apiVersion": "2023-06-01-preview",
