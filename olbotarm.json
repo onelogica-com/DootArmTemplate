@@ -270,6 +270,10 @@
                 "description": "PostgreSQL Server backup retention days"
             }
         },
+        "availabilityZone": {
+            "type": "string",
+            "defaultValue": "1"
+        },
         "geoRedundantBackup": {
             "type": "string",
             "defaultValue": "Disabled",
@@ -434,7 +438,10 @@
             "name": "[parameters('webAppName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]",
+                "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('postgresServerName'))]",
+                "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]"
             ],
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
@@ -446,7 +453,7 @@
                         },
                         {
                             "name": "AZURE_CONVERSATIONS_KEY",
-                            "value": ""
+                            "value": "[parameters('azureConversationsKey')]"
                         },
                         {
                             "name": "AZURE_CONVERSATIONS_PROJECT_NAME",
@@ -454,7 +461,7 @@
                         },
                         {
                             "name": "AZURE_CONVERSATIONS_DEPLOYMENT_NAME",
-                            "value": ""
+                            "value": "[parameters('azureConversationsDeploymentName')]"
                         },
                         {
                             "name": "AZURE_SEARCH_SERVICE_ENDPOINT",
@@ -462,19 +469,11 @@
                         },
                         {
                             "name": "AZURE_SEARCH_INDEX_NAME",
-                            "value": ""
+                            "value": "[parameters('azureSearchIndexName')]"
                         },
                         {
                             "name": "AZURE_SEARCH_API_KEY",
-                            "value": ""
-                        },
-                        {
-                            "name": "AzureSearchSemanticConfig",
-                            "value": ""
-                        },
-                        {
-                            "name": "AzureSearchSemanticConfig",
-                            "value": ""
+                            "value": "[parameters('azureSearchApiKey')]"
                         },
                         {
                             "name": "POSTGRESQL_CONNECTION_STRING",
@@ -487,18 +486,6 @@
                         {
                             "name": "MicrosoftAppPassword",
                             "value": "[parameters('msAppPassword')]"
-                        },
-                        {
-                            "name": "API_Version",
-                            "value": ""
-                        },
-                        {
-                            "name": "Azure_Embeddeing_Model",
-                            "value": ""
-                        },
-                        {
-                            "name": "Azure_Model_Deployment_Name",
-                            "value": ""
                         }
                     ]
                 }
@@ -540,18 +527,6 @@
                         {
                             "name": "SEARCH_ENDPOINT",
                             "value": "[reference(parameters('searchServiceName')).hostName]"
-                        },
-                        {
-                            "name": "POSTGRESQL_CONNECTION_STRING",
-                            "value": "[concat('Host=', reference(parameters('postgresServerName')).fullyQualifiedDomainName, ';Database=postgres;Username=', parameters('administratorLogin'), ';Password=', parameters('administratorLoginPassword'))]"
-                        },
-                        {
-                            "name": "MicrosoftAppId",
-                            "value": "[parameters('appid')]"
-                        },
-                        {
-                            "name": "MicrosoftAppPassword",
-                            "value": "[parameters('msAppPassword')]"
                         }
                     ]
                 }
