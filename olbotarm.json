@@ -64,6 +64,13 @@
                 "description": "The name of the frontend Web App"
             }
         },
+        "githubTokenforfrontend": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "GitHub token used for authenticating to the GitHub repository"
+            }
+        },
         "appServicePlanName": {
             "type": "string",
             "metadata": {
@@ -125,6 +132,13 @@
             "type": "string",
             "metadata": {
                 "description": "The URL of the GitHub repository"
+            }
+        },
+        "githubTokenforbackend": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "GitHub token used for authenticating to the GitHub repository"
             }
         },
         "branchforntend": {
@@ -497,7 +511,10 @@
                         "branch": "[parameters('branchbackend')]",
                         "isManualIntegration": false,
                         "deploymentRollbackEnabled": true,
-                        "isMercurial": false
+                        "isMercurial": false,
+                        "sourceControlAuthProperties": {
+                            "token": "[parameters('githubTokenforbackend')]"
+                        }
                     }
                 }
             ]
@@ -534,7 +551,10 @@
                         "branch": "[parameters('branchforntend')]",
                         "isManualIntegration": false,
                         "deploymentRollbackEnabled": true,
-                        "isMercurial": false
+                        "isMercurial": false,
+                        "sourceControlAuthProperties": {
+                            "token": "[parameters('githubTokenforfrontend')]"
+                        }
                     }
                 }
             ]
@@ -582,8 +602,7 @@
                     ]
                 },
                 "highAvailability": {
-                    "mode": "SameZone",
-                    "standbyAvailabilityZone": "1"
+                    "mode": "Disabled"
                 },
                 "replicationRole": "Primary"
             }
