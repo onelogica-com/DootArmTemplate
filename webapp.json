@@ -46,20 +46,6 @@
         "metadata": {
           "description": "Application settings for the Web App"
         }
-      },
-      "runtimeStack": {
-        "type": "string",
-        "defaultValue": "NODE|14-lts",  // Default runtime stack, modify as needed
-        "metadata": {
-          "description": "Runtime stack for the Web App"
-        }
-      },
-      "platform": {
-        "type": "string",
-        "defaultValue": "linux",  // Default platform, modify as needed
-        "metadata": {
-          "description": "Platform setting for the Web App (linux/windows)"
-        }
       }
     },
     "resources": [
@@ -74,7 +60,7 @@
           "capacity": 1
         },
         "properties": {
-          "reserved": "[if(equals(parameters('platform'), 'linux'), true, false)]"  // Ensure this runs on Linux if specified
+          "reserved": true  // This ensures the app runs on Linux
         }
       },
       {
@@ -88,12 +74,10 @@
         "properties": {
           "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
           "siteConfig": {
-            "appSettings": "[parameters('appSettings')]",
-            "linuxFxVersion": "[if(equals(parameters('platform'), 'linux'), parameters('runtimeStack'), json('null'))]",  // Linux stack
-            "windowsFxVersion": "[if(equals(parameters('platform'), 'windows'), parameters('runtimeStack'), json('null'))]"  // Windows stack
+            "appSettings": "[parameters('appSettings')]"
           }
         },
-        "kind": "[concat('app,', parameters('platform'))]"  // Specify platform (linux or windows)
+        "kind": "app,linux"  // Specifies this is a Linux Web App
       },
       {
         "type": "Microsoft.Web/sites/sourcecontrols",
