@@ -545,7 +545,7 @@
                 "appPasswordHint": "",
                 "endpoint": ""
             }
-        }
+        },
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2022-09-01",
@@ -570,46 +570,7 @@
             ],
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
-                "siteConfig": {
-                    // "appSettings": [
-                    //     {
-                    //         "name": "OPENAI_ENDPOINT",
-                    //         "value": "[reference(parameters('openAiName')).endpoint]"
-                    //     },
-                    //     {
-                    //         "name": "AZURE_CONVERSATIONS_KEY",
-                    //         "value": "[parameters('azureConversationsKey')]"
-                    //     },
-                    //     {
-                    //         "name": "AZURE_CONVERSATIONS_PROJECT_NAME",
-                    //         "value": "Axis_Bank_Bot_test_CLU"
-                    //     },
-                    //     {
-                    //         "name": "AZURE_CONVERSATIONS_DEPLOYMENT_NAME",
-                    //         "value": "[parameters('azureConversationsDeploymentName')]"
-                    //     },
-                    //     {
-                    //         "name": "AZURE_SEARCH_INDEX_NAME",
-                    //         "value": "[parameters('azureSearchIndexName')]"
-                    //     },
-                    //     {
-                    //         "name": "AZURE_SEARCH_API_KEY",
-                    //         "value": "[parameters('azureSearchApiKey')]"
-                    //     },
-                    //     {
-                    //         "name": "POSTGRESQL_CONNECTION_STRING",
-                    //         "value": "[concat('Host=', reference(parameters('postgresServerName')).fullyQualifiedDomainName, ';Database=postgres;Username=', parameters('administratorLogin'), ';Password=', parameters('administratorLoginPassword'))]"
-                    //     },
-                    //     {
-                    //         "name": "MicrosoftAppId",
-                    //         "value": "[parameters('appid')]"
-                    //     },
-                    //     {
-                    //         "name": "MicrosoftAppPassword",
-                    //         "value": "[parameters('msAppPassword')]"
-                    //     }
-                    // ]
-                }
+               
             },
             "resources": [
                 {
