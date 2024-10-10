@@ -374,10 +374,7 @@
                 "developerAppInsightKey": "",
                 "developerAppInsightApiKey": "",
                 "developerAppInsightApplicationId": ""
-            },
-            "identity": {
-                "type": "SystemAssigned"
-              }
+            }
         },
         {
             "type": "Microsoft.Web/serverfarms",
