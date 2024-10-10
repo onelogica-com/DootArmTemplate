@@ -569,8 +569,7 @@
                 "[resourceId('Microsoft.Search/searchServices', parameters('searchServiceName'))]"
             ],
             "properties": {
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
-               
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
             },
             "resources": [
                 {
@@ -602,15 +601,7 @@
                 "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
             ],
             "properties": {
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
-                "siteConfig": {
-                    // "appSettings": [
-                    //     {
-                    //         "name": "OPENAI_ENDPOINT",
-                    //         "value": "[reference(parameters('openAiName')).endpoint]"
-                    //     }
-                    // ]
-                }
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
             },
             "resources": [
                 {
