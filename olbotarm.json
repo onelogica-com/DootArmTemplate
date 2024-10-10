@@ -1,0 +1,609 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+        "_generator": {
+            "name": "bicep",
+            "version": "0.9.1.41621",
+            "templateHash": "2637152180661081755"
+        }
+    },
+    "parameters": {
+        "ResourcePrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "provide a 2-13 character prefix for all resources."
+            }
+        },
+        "botServiceName": {
+            "type": "string",
+            "defaultValue": "[format('{0}_botservice', parameters('ResourcePrefix'))]",
+            "metadata": {
+                "description": "The name of the Bot Service"
+            }
+        },
+        "openAiName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the OpenAI service"
+            }
+        },
+        "openAiLocation": {
+            "type": "string",
+            "defaultValue": "eastus",
+            "allowedValues": [
+                "eastus",
+                "southindia",
+                "sweedencentral",
+                "southcentralus",
+                "westeurope",
+                "francecentral"
+            ],
+            "metadata": {
+                "description": "Location for OpenAI resources. Limited to specific regions."
+            }
+        },
+        "searchServiceName": {
+            "type": "string",
+            "defaultValue": "[format('{0}azsearchservice', parameters('ResourcePrefix'))]",
+            "metadata": {
+                "description": "The name of the Azure Cognitive Search service"
+            }
+        },
+        "webAppName": {
+            "type": "string",
+            "defaultValue": "[format('{0}-website', parameters('ResourcePrefix'))]",
+            "metadata": {
+                "description": "The name of the Web App"
+            }
+        },
+        "frontendwebAppName": {
+            "type": "string",
+            "defaultValue": "oldoot",
+            "metadata": {
+                "description": "The name of the frontend Web App"
+            }
+        },
+        "appServicePlanName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the App Service Plan"
+            }
+        },
+        "postgresServerName": {
+            "type": "string",
+           "defaultValue": "[format('{0}-postgresservername', parameters('ResourcePrefix'))]",
+            "metadata": {
+                "description": "The name of the PostgreSQL Flexible Server"
+            }
+        },
+        "administratorLogin": {
+            "type": "string",
+            "metadata": {
+                "description": "PostgreSQL administrator login name"
+            }
+        },
+        "administratorLoginPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "PostgreSQL administrator password"
+            }
+        },
+        "repositoryUrl": {
+            "type": "string",
+            "metadata": {
+                "description": "The URL of the GitHub repository"
+            }
+        },
+        "repositoryfrontendUrl": {
+            "type": "string",
+            "metadata": {
+                "description": "The URL of the GitHub repository"
+            }
+        },
+        "branchforntend": {
+            "type": "string",
+            "defaultValue": "main",
+            "metadata": {
+                "description": "The branch of the GitHub repository to use"
+            }
+        },
+        "gpt4Capacity": {
+            "type": "int",
+            "defaultValue": 10,
+            "metadata": {
+                "description": "The capacity for GPT-4 models in TPM (Tokens Per Minute)"
+            }
+        },
+        "AzureOpenAIGPT4ModelVersion": {
+            "type": "string",
+            "defaultValue": "0613",
+            "metadata": {
+                "description": "Azure OpenAI GPT 4 Model Version"
+            }
+        },
+        "AzureOpenAIGPT4ModelName": {
+            "type": "string",
+            "defaultValue": "gpt-4o",
+            "metadata": {
+                "description": "Azure OpenAI  GPT 4 Model Name"
+            }
+        },
+        "AzureOpenAIGPT4ominiModelName": {
+            "type": "string",
+            "defaultValue": "gpt-4o-mini",
+            "metadata": {
+                "description": "Azure OpenAI  GPT 4 Model Name"
+            }
+        },
+        "AzureOpenAIGPT4ominiModelVersion": {
+            "type": "string",
+            "defaultValue": "0613",
+            "metadata": {
+                "description": "Azure OpenAI GPT 4 Model Version"
+            }
+        },
+        "embeddingCapacity": {
+            "type": "int",
+            "defaultValue": 120,
+            "metadata": {
+                "description": "The capacity for embedding model in TPM"
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources"
+            }
+        },
+        "TextAnalyticsAccountName": {
+            "defaultValue": "[format('{0}aztextanalytics', parameters('ResourcePrefix'))]",
+            "type": "string",
+            "metadata": {
+                "description": "Name of Azure Translator Account"
+            }
+        },
+        "postgresFlexibleServersSkuTier": {
+            "type": "string",
+            "defaultValue": "Burstable",
+            "allowedValues": [
+                "Burstable",
+                "GeneralPurpose",
+                "MemoryOptimized"
+            ],
+            "metadata": {
+                "description": "The tier of the particular SKU, e.g. Burstable"
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "defaultValue": "Standard_B1ms",
+            "metadata": {
+                "description": "The name of the sku, typically, tier + family + cores, e.g. Standard_D4s_v3"
+            }
+        },
+        "skuSizeMB": {
+            "type": "int",
+            "defaultValue": 51200,
+            "metadata": {
+                "description": "Azure database for PostgreSQL Sku Size "
+            }
+        },
+        "skuTier": {
+            "type": "string",
+            "defaultValue": "Burstable",
+            "metadata": {
+                "description": "Azure database for PostgreSQL pricing tier"
+            }
+        },
+        "skuFamily": {
+            "type": "string",
+            "defaultValue": "Gen5",
+            "metadata": {
+                "description": "Azure database for PostgreSQL sku family"
+            }
+        },
+        "postgresqlVersion": {
+            "type": "string",
+            "defaultValue": "15",
+            "allowedValues": [
+                "16",
+                "15",
+                "14",
+                "13",
+                "12",
+                "11"
+            ],
+            "metadata": {
+                "description": "PostgreSQL version"
+            }
+        },
+        "locationReplica": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for replica database."
+            }
+        },
+        "backupRetentionDays": {
+            "type": "int",
+            "defaultValue": 7,
+            "metadata": {
+                "description": "PostgreSQL Server backup retention days"
+            }
+        },
+        "geoRedundantBackup": {
+            "type": "string",
+            "defaultValue": "Disabled",
+            "metadata": {
+                "description": "Geo-Redundant Backup setting"
+            }
+        }
+    },
+    "msAppId": {
+        "type": "string",
+        "metadata": {
+          "description": "The Microsoft App ID for the bot (MSA AppId)"
+        }
+      },
+      "msAppPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The Microsoft App Password for the bot (MSA AppPassword)"
+        }
+      },
+    "variables": {
+        "languageServiceName": "[concat(parameters('botServiceName'), '-lang')]"
+    },
+    "resources": [
+       
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2023-10-01-preview",
+            "name": "[parameters('openAiName')]",
+            "location": "[parameters('openAiLocation')]",
+            "sku": {
+                "name": "S0"
+            },
+            "kind": "OpenAI",
+            "properties": {
+                "customSubDomainName": "[parameters('openAiName')]",
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/deployments",
+            "apiVersion": "2023-10-01-preview",
+            "name": "[concat(parameters('openAiName'), '/gpt-4o-mini')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]"
+            ],
+            "properties": {
+                "model": {
+                    "format": "OpenAI",
+                    "name": "[parameters('AzureOpenAIGPT4ominiModelName')]",
+                    "version": "[parameters('AzureOpenAIGPT4ominiModelVersion')]"
+                },
+                "sku": {
+                    "name": "GlobalStandard",
+                    "capacity": "[parameters('gpt4Capacity')]"
+                },
+                "raiPolicyName": "Microsoft.Default"
+                
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/deployments",
+            "apiVersion": "2023-10-01-preview",
+            "name": "[concat(parameters('openAiName'),'/gpt-4o')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]"
+            ],
+            "sku": {
+                "name": "GlobalStandard",
+                "capacity": "[parameters('gpt4Capacity')]"
+            },
+            "properties": {
+                "model": {
+                    "format": "OpenAI",
+                    "name": "[parameters('AzureOpenAIGPT4ModelName')]",
+                    "version": "[parameters('AzureOpenAIGPT4ModelVersion')]"
+                
+            },
+                "raiPolicyName": "Microsoft.Default"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/deployments",
+            "apiVersion": "2023-10-01-preview",
+            "name": "[concat(parameters('openAiName'), '/text-embedding-ada-002')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]"
+            ],
+            "properties": {
+                "model": {
+                    "format": "OpenAI",
+                    "name": "text-embedding-ada-002",
+                    "version": "2"
+                },
+                "raiPolicyName": "Microsoft.Default",
+                "capacity": "[parameters('embeddingCapacity')]"
+            }
+        },
+          {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2023-10-01-preview",
+            "name": "[parameters('TextAnalyticsAccountName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "S"
+            },
+            "kind": "TextAnalytics",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Search/searchServices",
+            "apiVersion": "2023-11-01",
+            "name": "[parameters('searchServiceName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "standard"
+            }
+        },
+        {
+            "type": "Microsoft.BotService/botServices",
+            "apiVersion": "2022-09-15",
+            "name": "[parameters('botServiceName')]",
+            "location": "global",
+            "sku": {
+                "name": "F0"
+            },
+            "kind": "bot",
+            "properties": {
+                "endpoint": "[concat('https://', parameters('webAppName'), '.azurewebsites.net/api/messages')]",
+                "displayName": "[parameters('botServiceName')]",
+                "description": "Bot created from ARM template",
+                "msaAppId": "[parameters('msAppId')]",
+                "msaAppPassword": "[parameters('msAppPassword')]",
+                "developerAppInsightKey": "",
+                "developerAppInsightApiKey": "",
+                "developerAppInsightApplicationId": ""
+            },
+            "identity": {
+                "type": "SystemAssigned"
+              }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('appServicePlanName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "S1",
+                "tier": "Standard",
+                "size": "S1",
+                "family": "S",
+                "capacity": 1
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('webAppName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+            ],
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "OPENAI_ENDPOINT",
+                            "value": "[reference(parameters('openAiName')).endpoint]"
+                        },
+                        {
+                            "name": "AZURE_CONVERSATIONS_KEY",
+                            "value": ""
+                        },
+                        {
+                            "name": "AZURE_CONVERSATIONS_PROJECT_NAME",
+                            "value": "Axis_Bank_Bot_test_CLU"
+                        },
+                        {
+                            "name": "AZURE_CONVERSATIONS_DEPLOYMENT_NAME",
+                            "value": ""
+                        },
+                        {
+                            "name": "AZURE_SEARCH_SERVICE_ENDPOINT",
+                            "value": "[reference(parameters('searchServiceName')).hostName]"
+                        },
+                        {
+                            "name": "AZURE_SEARCH_INDEX_NAME",
+                            "value": ""
+                        },
+                        {
+                            "name": "AZURE_SEARCH_API_KEY",
+                            "value": ""
+                        },
+                        {
+                            "name": "AzureSearchSemanticConfig",
+                            "value": ""
+                        },
+                        {
+                            "name": "AzureSearchSemanticConfig",
+                            "value": ""
+                        },
+                        {
+                            "name": "POSTGRESQL_CONNECTION_STRING",
+                            "value": "[concat('Host=', reference(parameters('postgresServerName')).fullyQualifiedDomainName, ';Database=postgres;Username=', parameters('administratorLogin'), ';Password=', parameters('administratorLoginPassword'))]"
+                        },
+                        {
+                            "name": "MicrosoftAppId",
+                            "value": "[parameters('msAppId')]"
+                          },
+                          {
+                            "name": "MicrosoftAppPassword",
+                            "value": "[parameters('msAppPassword')]"
+                          },
+                          {
+                            "name": "API_Version",
+                            "value": ""
+                        },
+                        {
+                            "name": "Azure_Embeddeing_Model",
+                            "value": ""
+                        },
+                        {
+                            "name": "Azure_Model_Deployment_Name",
+                            "value": ""
+                        }
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "type": "sourcecontrols",
+                    "apiVersion": "2022-09-01",
+                    "name": "web",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+                    ],
+                    "properties": {
+                        "repoUrl": "[parameters('repositoryUrl')]",
+                        "branch": "[parameters('branch')]",
+                        "isManualIntegration": false,
+                        "deploymentRollbackEnabled": true,
+                        "isMercurial": false
+                    }
+                }
+            ]
+        },  
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('frontendwebAppName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+            ],
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "OPENAI_ENDPOINT",
+                            "value": "[reference(parameters('openAiName')).endpoint]"
+                        },
+                        {
+                            "name": "SEARCH_ENDPOINT",
+                            "value": "[reference(parameters('searchServiceName')).hostName]"
+                        },
+                        {
+                            "name": "POSTGRESQL_CONNECTION_STRING",
+                            "value": "[concat('Host=', reference(parameters('postgresServerName')).fullyQualifiedDomainName, ';Database=postgres;Username=', parameters('administratorLogin'), ';Password=', parameters('administratorLoginPassword'))]"
+                        },
+                        {
+                            "name": "MicrosoftAppId",
+                            "value": "[parameters('msAppId')]"
+                          },
+                          {
+                            "name": "MicrosoftAppPassword",
+                            "value": "[parameters('msAppPassword')]"
+                          }
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "type": "sourcecontrols",
+                    "apiVersion": "2022-09-01",
+                    "name": "web",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', parameters('frontendwebAppName'))]"
+                    ],
+                    "properties": {
+                        "repoUrl": "[parameters('repositoryfrontendUrl')]",
+                        "branch": "[parameters('branchforntend')]",
+                        "isManualIntegration": false,
+                        "deploymentRollbackEnabled": true,
+                        "isMercurial": false
+                    }
+                }
+            ]
+        }, 
+        {
+            "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+            "apiVersion": "2023-06-01-preview",
+            "name": "[parameters('postgresServerName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('postgresFlexibleServersSkuTier')]"
+            },
+            "properties": {
+                "replica": {
+                    "role": "Primary"
+                },
+                "storage": {
+                    "iops": 500,
+                    "tier": "P10",
+                    "storageSizeGB": "[parameters('skuSizeGB')]"
+                },
+                "version": "[parameters('postgresqlVersion')]",
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+                "availabilityZone": "[parameters('availabilityZone')]",
+                "backup": {
+                    "backupRetentionDays": 7,
+                    "geoRedundantBackup": "Disabled"
+                },
+                "network": {
+                    "delegatedSubnetResourceId": "",
+                    "privateDnsZoneArmResourceId": "",
+                    "firewallRules": [
+                        {
+                            "name": "AllowAllAzureServices",
+                            "startIpAddress": "0.0.0.0",
+                            "endIpAddress": "0.0.0.0"
+                        },
+                        {
+                            "name": "AllowAllIPs",
+                            "startIpAddress": "0.0.0.0",
+                            "endIpAddress": "255.255.255.255"
+                        }
+                    ]
+                },
+                "highAvailability": {
+                    "mode": "SameZone",
+                    "standbyAvailabilityZone": "1"
+                },
+                "replicationRole": "Primary"
+            }
+        }
+    ],
+    "outputs": {
+        "openAiEndpoint": {
+            "type": "string",
+            "value": "[reference(parameters('openAiName')).endpoint]"
+        },
+        "searchServiceEndpoint": {
+            "type": "string",
+            "value": "[reference(parameters('searchServiceName')).hostName]"
+        },
+        "webAppUrl": {
+            "type": "string",
+            "value": "[reference(parameters('webAppName')).defaultHostName]"
+        },
+        "postgresServerFqdn": {
+            "type": "string",
+            "value": "[reference(parameters('postgresServerName')).fullyQualifiedDomainName]"
+        }
+    }
+}
