@@ -125,14 +125,15 @@
             "name": "[parameters('appServicePlanName')]",
             "location": "[parameters('location')]",
             "sku": {
-                "tier": "Standard",
-                "name": "S1",
+                "tier": "PremiumV2",  // Change to "Premium" or "PremiumV3" if required
+                "name": "P1v2",  // Adjust the name according to the specific premium tier you need
                 "capacity": 1
             },
             "properties": {
-                "reserved": true
+                "reserved": true  // Set to true for Linux plans
             }
         },
+        
         // Frontend Web App
         {
             "type": "Microsoft.Web/sites",
