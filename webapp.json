@@ -147,7 +147,8 @@
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
                     "appSettings": "[parameters('appSettings')]",
-                    "linuxFxVersion": "NODE|20-lts"
+                    "linuxFxVersion": "NODE|20-lts",
+                    "startupCommand": "npx serve -s dist -l 3000"
                 }
             }
         },
@@ -168,6 +169,42 @@
                 }
             }
         },
+         // ServerWeb App
+         {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2023-12-01",
+            "name": "[parameters('serverwebAppName)]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+            ],
+            "kind": "app,linux",
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "siteConfig": {
+                    "appSettings": "[parameters('erverappSetting')]",
+                    "linuxFxVersion": "NODE|20-lts",
+                    "startupCommand": " npm run dev"
+                }
+            }
+        },
+        // ServerGitHub Deployment
+        {
+            "type": "Microsoft.Web/sites/sourcecontrols",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('webAppName'), '/web')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+            ],
+            "properties": {
+                "repoUrl": "[parameters('serverrepositoryUrl')]",
+                "branch": "[parameters('serverbranch')]",
+                "isGitHubAction": true,
+                "githubActionConfiguration": {
+                    "githubPersonalAccessToken": "[parameters('servergithubToken')]"
+                }
+            }
+        },
         // Backend Web App
         {
             "type": "Microsoft.Web/sites",
@@ -182,7 +219,9 @@
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
                     "appSettings": "[parameters('backendappSettings')]",
-                    "linuxFxVersion": "PYTHON|3.9"
+                    "linuxFxVersion": "PYTHON|3.9",
+                    "startupCommand": "gunicorn --bind 0.0.0.0 --worker-class aiohttp.worker.GunicornWebWorker --timeout 600 app:APP"
+                    
                 }
             }
         },
@@ -212,10 +251,14 @@
             "kind": "AzurePowerShell",
             "properties": {
                 "azPowerShellVersion": "3.0",
-                "scriptContent": "$APP_NAME = '[parameters('aadAppName')]' \n $APP_ID = az ad app create --display-name $APP_NAME --query appId --output tsv \n $SECRET_VALUE = az ad app credential reset --id $APP_ID --append --query password --output tsv \n az ad app permission add --id $APP_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions User.Read \n az ad app permission grant --id $APP_ID --api 00000003-0000-0000-c000-000000000000",
+                "scriptContent": "$APP_NAME = \"[parameters('aadAppName')]\"\n$SECRET_NAME = \"Client Secret\"\n$APP_ID = az ad app create --display-name $APP_NAME --query appId --output tsv\nWrite-Host \"App Registration created with App ID: $APP_ID\"\n$SECRET_VALUE = az ad app credential reset --id $APP_ID --append --query password --output tsv\nWrite-Host \"Client secret created with value: $SECRET_VALUE\"\naz ad app permission add --id $APP_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions User.Read\naz ad app permission grant --id $APP_ID --api 00000003-0000-0000-c000-000000000000\naz ad app update --id $APP_ID --add web.redirectUris \"https://token.botframework.com\" \"https://token.botframework.com/.auth/web/redirect\"\nWrite-Host \"Redirect URIs added: https://token.botframework.com and https://token.botframework.com/.auth/web/redirect\"\nWrite-Host \"App Registration Name: $APP_NAME\"\nWrite-Host \"App ID: $APP_ID\"\nWrite-Host \"Client Secret: $SECRET_VALUE\"",
+                "arguments": "",
+                "retentionInterval": "P1D",
                 "timeout": "PT30M",
-                "cleanupPreference": "Always"
+                "cleanupPreference": "Always",
+                "forceUpdateTag": "[utcNow()]"
             }
         }
+        
     ]
 }
