@@ -2,12 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "webAppName": {
-            "type": "String",
-            "metadata": {
-                "description": "Name of the Web App"
-            }
-        },
         "location": {
             "defaultValue": "[resourceGroup().location]",
             "type": "String",
@@ -21,10 +15,22 @@
                 "description": "Name of the App Service Plan"
             }
         },
+        "webAppName": {
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Web App"
+            }
+        },
         "repositoryUrl": {
             "type": "String",
             "metadata": {
                 "description": "The GitHub repository URL"
+            }
+        },
+        "githubToken": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "GitHub Personal Access Token"
             }
         },
         "branch": {
@@ -34,12 +40,6 @@
                 "description": "The branch in the repository to deploy from"
             }
         },
-        "githubToken": {
-            "type": "SecureString",
-            "metadata": {
-                "description": "GitHub Personal Access Token"
-            }
-        },
         "appSettings": {
             "defaultValue": {},
             "type": "Object",
@@ -47,16 +47,74 @@
                 "description": "Application settings for the Web App"
             }
         },
-        "stack": {
+        "serverwebAppName": {
             "type": "String",
             "metadata": {
-                "description": "Stack for the Web App (e.g., NODE|16-lts, PYTHON|3.9, DOTNETCORE|6.0)"
+                "description": "Name of the frontend server Web App"
             }
         },
-        "startupCommand": {
+        "serverrepositoryUrl": {
             "type": "String",
             "metadata": {
-                "description": "Startup command for the Web App"
+                "description": "The GitHub repository URL of frontend server"
+            }
+        },
+        "servergithubToken": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "GitHub Personal Access Token"
+            }
+        },
+        "serverbranch": {
+            "defaultValue": "main",
+            "type": "String",
+            "metadata": {
+                "description": "The branch in the repository to deploy from"
+            }
+        },
+        "serverappSettings": {
+            "defaultValue": {},
+            "type": "Object",
+            "metadata": {
+                "description": "Application settings for the Web App"
+            }
+        },
+        "backendwebAppName": {
+            "type": "String",
+            "metadata": {
+                "description": "Name of the backend Web App"
+            }
+        },
+        "backendrepositoryUrl": {
+            "type": "String",
+            "metadata": {
+                "description": "The GitHub backend repository URL"
+            }
+        },
+        "backendgithubToken": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "GitHub Personal Access Token"
+            }
+        },
+        "backendbranch": {
+            "defaultValue": "main",
+            "type": "String",
+            "metadata": {
+                "description": "The branch in the repository to deploy from"
+            }
+        },
+        "backendappSettings": {
+            "defaultValue": {},
+            "type": "Object",
+            "metadata": {
+                "description": "Application settings for the Web App"
+            }
+        },
+        "aadAppName": {
+            "type": "String",
+            "metadata": {
+                "description": "Name for the Azure AD App registration"
             }
         }
     },
@@ -75,6 +133,7 @@
                 "reserved": true
             }
         },
+        // Frontend Web App
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2023-12-01",
@@ -88,11 +147,11 @@
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
                     "appSettings": "[parameters('appSettings')]",
-                    "linuxFxVersion": "[parameters('stack')]",
-                    "appCommandLine": "[parameters('startupCommand')]"
+                    "linuxFxVersion": "NODE|20-lts"
                 }
             }
         },
+        // Frontend GitHub Deployment
         {
             "type": "Microsoft.Web/sites/sourcecontrols",
             "apiVersion": "2023-12-01",
@@ -103,13 +162,59 @@
             "properties": {
                 "repoUrl": "[parameters('repositoryUrl')]",
                 "branch": "[parameters('branch')]",
-                "isManualIntegration": false,
-                "deploymentRollbackEnabled": true,
-                "isMercurial": false,
                 "isGitHubAction": true,
                 "githubActionConfiguration": {
                     "githubPersonalAccessToken": "[parameters('githubToken')]"
                 }
+            }
+        },
+        // Backend Web App
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2023-12-01",
+            "name": "[parameters('backendwebAppName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+            ],
+            "kind": "app,linux",
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "siteConfig": {
+                    "appSettings": "[parameters('backendappSettings')]",
+                    "linuxFxVersion": "PYTHON|3.9"
+                }
+            }
+        },
+        // Backend GitHub Deployment
+        {
+            "type": "Microsoft.Web/sites/sourcecontrols",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('backendwebAppName'), '/web')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('backendwebAppName'))]"
+            ],
+            "properties": {
+                "repoUrl": "[parameters('backendrepositoryUrl')]",
+                "branch": "[parameters('backendbranch')]",
+                "isGitHubAction": true,
+                "githubActionConfiguration": {
+                    "githubPersonalAccessToken": "[parameters('backendgithubToken')]"
+                }
+            }
+        },
+        // AAD Deployment Script
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "aadAppRegistrationScript",
+            "location": "[parameters('location')]",
+            "kind": "AzurePowerShell",
+            "properties": {
+                "azPowerShellVersion": "3.0",
+                "scriptContent": "$APP_NAME = '[parameters('aadAppName')]' \n $APP_ID = az ad app create --display-name $APP_NAME --query appId --output tsv \n $SECRET_VALUE = az ad app credential reset --id $APP_ID --append --query password --output tsv \n az ad app permission add --id $APP_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions User.Read \n az ad app permission grant --id $APP_ID --api 00000003-0000-0000-c000-000000000000",
+                "timeout": "PT30M",
+                "cleanupPreference": "Always"
             }
         }
     ]
