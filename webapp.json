@@ -174,7 +174,7 @@
          {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2023-12-01",
-            "name": "[parameters('serverwebAppName)]",
+            "name": "[parameters('serverwebAppName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
@@ -193,9 +193,9 @@
         {
             "type": "Microsoft.Web/sites/sourcecontrols",
             "apiVersion": "2023-12-01",
-            "name": "[concat(parameters('webAppName'), '/web')]",
+            "name": "[concat(parameters('serverwebAppName'), '/web')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('serverwebAppName'))]"
             ],
             "properties": {
                 "repoUrl": "[parameters('serverrepositoryUrl')]",
