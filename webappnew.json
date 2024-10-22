@@ -1,0 +1,130 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "webAppName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Azure Web App"
+        }
+      },
+      "acrName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Azure Container Registry"
+        }
+      },
+      "appServicePlanName": {
+        "type": "string",
+        "defaultValue": "myAppServicePlan",
+        "metadata": {
+          "description": "Name of the App Service Plan"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources"
+        }
+      },
+      "acrSku": {
+        "type": "string",
+        "defaultValue": "Basic",
+        "allowedValues": [
+          "Basic",
+          "Standard",
+          "Premium"
+        ],
+        "metadata": {
+          "description": "SKU for Azure Container Registry"
+        }
+      },
+      "appServicePlanSku": {
+        "type": "string",
+        "defaultValue": "P1v2",
+        "allowedValues": [
+          "B1",
+          "B2",
+          "B3",
+          "S1",
+          "S2",
+          "P1v2",
+          "P2v2",
+          "P3v2"
+        ],
+        "metadata": {
+          "description": "SKU for App Service Plan"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2021-02-01",
+        "name": "[parameters('appServicePlanName')]",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "[parameters('appServicePlanSku')]",
+          "tier": "PremiumV2",
+          "capacity": 1
+        }
+      },
+      {
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2021-02-01",
+        "name": "[parameters('webAppName')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+        ],
+        "properties": {
+          "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+          "siteConfig": {
+            "appSettings": [
+              {
+                "name": "DOCKER_REGISTRY_SERVER_URL",
+                "value": "[concat('https://', parameters('acrName'), '.azurecr.io')]"
+              },
+              {
+                "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                "value": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', parameters('acrName')), '2021-09-01').username]"
+              },
+              {
+                "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                "value": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', parameters('acrName')), '2021-09-01').passwords[0].value]"
+              },
+              {
+                "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+                "value": "false"
+              }
+            ],
+            "linuxFxVersion": "[concat('DOCKER|', parameters('acrName'), '.azurecr.io/myapp:latest')]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.ContainerRegistry/registries",
+        "apiVersion": "2021-09-01",
+        "name": "[parameters('acrName')]",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "[parameters('acrSku')]"
+        },
+        "properties": {
+          "adminUserEnabled": true
+        }
+      }
+    ],
+    "outputs": {
+      "acrLoginServer": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('acrName'))).loginServer]"
+      },
+      "webAppUrl": {
+        "type": "string",
+        "value": "[concat('https://', parameters('webAppName'), '.azurewebsites.net')]"
+      }
+    }
+  }
+  
