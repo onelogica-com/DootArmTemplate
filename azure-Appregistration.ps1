@@ -1,5 +1,7 @@
-$APP_NAME = Read-Host -Prompt "Enter the App Name"
-$SECRET_NAME = Read-Host -Prompt "Enter the Secret Description"
+param(
+    [string] $APP_NAME,
+    [string] $SECRET_NAME
+)
 
 # Log in to Azure (not needed in script, as it runs in Azure context)
 # Instead, rely on the Managed Identity set in the ARM template
