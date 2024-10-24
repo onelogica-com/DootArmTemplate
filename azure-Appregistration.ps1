@@ -1,7 +1,6 @@
-param( 
-    [string] $APP_NAME,
-    [string] $SECRET_NAME
-)
+# Hardcoded values for the application name and secret name
+$APP_NAME = "dootaadtest"  # Replace with your desired app name
+$SECRET_NAME = "AADdootAppSecret" # Replace with your desired secret name
 
 try {
     # Create the Azure AD App Registration
