@@ -16,7 +16,7 @@ Write-Output "Secret_Value=$SECRET_VALUE"
 az ad app permission add --id $APP_ID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
 
 # Grant the permissions (admin consent)
-az ad app permission admin-consent --id $APP_ID
+az ad app permission grant --id $APP_ID --api 00000003-0000-0000-c000-000000000000 --scope /user.read
 
 # Output the app details
 Write-Output "App_Name=$APP_NAME"
