@@ -7,7 +7,7 @@ $SECRET_NAME = Read-Host -Prompt "Enter the Secret Description"
 # Create the Azure AD App Registration
 $APP = New-AzADApplication -DisplayName $APP_NAME -IdentifierUris "https://token.botframework.com" -ReplyUrls "https://token.botframework.com/.auth/web/redirect" # Adjust your ReplyUrls as needed
 $APP_ID = $APP.ApplicationId
-Write-Output "App_ID=$APP_ID
+Write-Output "App_ID=$APP_ID"
 
 # Create a client secret for the app
 $SECRET = New-AzADAppCredential -ApplicationId $APP_ID -Password (New-Guid).Guid
