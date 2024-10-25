@@ -1,7 +1,7 @@
-param(
+param (
     [string] [Parameter(Mandatory=$false)] $APP_NAME = "MyAppName",  # Hardcoded app name
     [string] [Parameter(Mandatory=$false)] $SECRET_NAME = "MyAppSecret",  # Hardcoded secret name
-    [string] [Parameter(Mandatory=$false)] $subscriptionId = "f4e709ca-ccb8-4e46-b0b0-822db3762d86",  # Subscription ID
+    [string] [Parameter(Mandatory=$false)] $subscriptionId,  # Subscription ID
     [string] [Parameter(Mandatory=$false)] $managedIdentityName  # Managed Identity Name, provided from the ARM template
 )
 
@@ -19,18 +19,18 @@ if ($existingApp) {
     $APP = New-AzADApplication -DisplayName $APP_NAME -IdentifierUris "https://token.botframework.com" -ReplyUrls "https://token.botframework.com/.auth/web/redirect" # Adjust your ReplyUrls as needed
     $DeploymentScriptOutputs['App_ID'] = $APP.ApplicationId
     Write-Output "Created new App: $APP_NAME"
+}
 
-    # Assign the "Reader" role to the managed identity
-    $identity = Get-AzUserAssignedIdentity -ResourceGroupName (Get-AzResourceGroup | Where-Object { $_.Location -eq (Get-AzResourceGroup).Location }).ResourceGroupName -Name $managedIdentityName
-    if ($identity) {
-        $principalId = $identity.PrincipalId
-        
-        # Assign the Reader role
-        az role assignment create --assignee $principalId --role "Reader" --scope "/subscriptions/$subscriptionId"
-        Write-Output "Assigned 'Reader' role to the managed identity: $managedIdentityName"
-    } else {
-        Write-Output "Managed Identity not found: $managedIdentityName"
-    }
+# Assign the "Reader" role to the managed identity
+$identity = Get-AzUserAssignedIdentity -ResourceGroupName (Get-AzResourceGroup | Where-Object { $_.Location -eq (Get-AzResourceGroup).Location }).ResourceGroupName -Name $managedIdentityName
+if ($identity) {
+    $principalId = $identity.PrincipalId
+    
+    # Assign the Reader role
+    az role assignment create --assignee $principalId --role "Reader" --scope "/subscriptions/$subscriptionId"
+    Write-Output "Assigned 'Reader' role to the managed identity: $managedIdentityName"
+} else {
+    Write-Output "Managed Identity not found: $managedIdentityName"
 }
 
 # Create a client secret for the app
