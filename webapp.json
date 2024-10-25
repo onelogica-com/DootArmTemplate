@@ -17,119 +17,125 @@
         },
         "location": {
             "defaultValue": "[resourceGroup().location]",
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "Location for the Web App"
             }
         },
         "appServicePlanName": {
-            "type": "String",
+            "type": "string",
             "defaultValue": "[format('{0}svcplan', parameters('ResourcePrefix'))]",
             "metadata": {
                 "description": "Name of the App Service Plan"
             }
         },
         "webAppName": {
-            "type": "String",
-            "defaultValue": "[format('{0}frontendwebapp', parameters('ResourcePrefix'))]",
+            "type": "string",
+            "defaultValue": "frontendDoot",
             "metadata": {
                 "description": "Name of the Web App"
             }
         },
         "repositoryUrl": {
-            "type": "String",
+            "type": "string",
+            "defaultValue": "https://github.com/onelogica-com/dootbotcode",
             "metadata": {
                 "description": "The GitHub repository URL"
             }
         },
         "githubToken": {
-            "type": "SecureString",
+            "type": "securestring",
+            "defaultValue": "",
             "metadata": {
                 "description": "GitHub Personal Access Token"
             }
         },
         "branch": {
-            "defaultValue": "main",
-            "type": "String",
+            "defaultValue": "master",
+            "type": "string",
             "metadata": {
                 "description": "The branch in the repository to deploy from"
             }
         },
         "appSettings": {
             "defaultValue": {},
-            "type": "Object",
+            "type": "object",
             "metadata": {
                 "description": "Application settings for the Web App"
             }
         },
         "serverwebAppName": {
-            "type": "String",
+            "type": "string",
             "defaultValue": "[format('{0}serverwebapp', parameters('ResourcePrefix'))]",
             "metadata": {
                 "description": "Name of the frontend server Web App"
             }
         },
         "serverrepositoryUrl": {
-            "type": "String",
+            "type": "string",
+            "defaultValue": "https://github.com/anshupal667/serverglambot.git",
             "metadata": {
                 "description": "The GitHub repository URL of frontend server"
             }
         },
         "servergithubToken": {
-            "type": "SecureString",
+            "type": "securestring",
+            "defaultValue": "",
             "metadata": {
                 "description": "GitHub Personal Access Token"
             }
         },
         "serverbranch": {
-            "defaultValue": "main",
-            "type": "String",
+            "defaultValue": "master",
+            "type": "string",
             "metadata": {
                 "description": "The branch in the repository to deploy from"
             }
         },
         "serverappSettings": {
             "defaultValue": {},
-            "type": "Object",
+            "type": "object",
             "metadata": {
                 "description": "Application settings for the Web App"
             }
         },
         "backendwebAppName": {
-            "type": "String",
-            "defaultValue": "[format('{0}backendwebapp', parameters('ResourcePrefix'))]",
+            "type": "string",
+            "defaultValue": "dootarmtempnewbackendwebapp",
             "metadata": {
                 "description": "Name of the backend Web App"
             }
         },
         "backendrepositoryUrl": {
-            "type": "String",
+            "type": "string",
+            "defaultValue": "https://github.com/onelogica-com/bankbot",
             "metadata": {
                 "description": "The GitHub backend repository URL"
             }
         },
         "backendgithubToken": {
-            "type": "SecureString",
+            "type": "securestring",
+            "defaultValue": "",
             "metadata": {
                 "description": "GitHub Personal Access Token"
             }
         },
         "backendbranch": {
-            "defaultValue": "main",
-            "type": "String",
+            "defaultValue": "rabc_enabled_bot",
+            "type": "string",
             "metadata": {
                 "description": "The branch in the repository to deploy from"
             }
         },
         "backendappSettings": {
             "defaultValue": {},
-            "type": "Object",
+            "type": "object",
             "metadata": {
                 "description": "Application settings for the Web App"
             }
         },
         "aadAppName": {
-            "type": "String",
+            "type": "string",
             "defaultValue": "[format('{0}AAD', parameters('ResourcePrefix'))]",
             "metadata": {
                 "description": "Name for the Azure AD App registration"
@@ -298,7 +304,7 @@
             "defaultValue": {
                 "Microsoft.BotService/botServices": {}
             },
-            "type": "Object",
+            "type": "object",
             "metadata": {
                 "description": "Tags to assign to the bot service resource."
             }
@@ -332,7 +338,7 @@
             }
         },
         "openAiLocation": {
-            "defaultValue": "eastus",
+            "defaultValue": "southindia",
             "allowedValues": [
                 "eastus",
                 "southindia",
@@ -341,72 +347,75 @@
                 "westeurope",
                 "francecentral"
             ],
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "Location for OpenAI resources. Limited to specific regions."
             }
         },
         "openAiName": {
-            "type": "String",
+            "type": "string",
+            "defaultValue": "[format('{0}openai', parameters('ResourcePrefix'))]",
             "metadata": {
                 "description": "The name of the OpenAI service"
             }
         },
-        "openAiNamenext": {
-            "type": "String",
-            "metadata": {
-                "description": "The name of the OpenAI service"
-            }
-        },
-        "openAiNameforgpt40mini":{
-            "type": "String",
-            "metadata": {
-                "description": "The name of the OpenAI service"
-            }
-        },
+        // "openAiNamenext": {
+        //     "type": "string",
+        //     "defaultValue": "[format('{0}gpt4o', parameters('ResourcePrefix'))]",
+        //     "metadata": {
+        //         "description": "The name of the OpenAI service"
+        //     }
+        // },
+        // "openAiNameforgpt40mini":{
+        //     "type": "string",
+        //     "defaultValue": "[format('{0}gpt4omini', parameters('ResourcePrefix'))]",
+        //     "metadata": {
+        //         "description": "The name of the OpenAI service"
+        //     }
+        // },
         "gpt4Capacity": {
             "defaultValue": 10,
-            "type": "Int",
+            "type": "int",
             "metadata": {
                 "description": "The capacity for GPT-4 models in TPM (Tokens Per Minute)"
             }
         },
         "AzureOpenAIGPT4ModelVersion": {
-            "defaultValue": "0613",
-            "type": "String",
+            "defaultValue": "2024-05-13",
+            "type": "string",
             "metadata": {
                 "description": "Azure OpenAI GPT 4 Model Version"
             }
         },
         "AzureOpenAIGPT4ModelName": {
             "defaultValue": "gpt-4o",
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "Azure OpenAI GPT 4 Model Name"
             }
         },
         "AzureOpenAIGPT4ominiModelName": {
             "defaultValue": "gpt-4o-mini",
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "Azure OpenAI GPT 4 Mini Model Name"
             }
         },
         "AzureOpenAIGPT4ominiModelVersion": {
-            "defaultValue": "0613",
-            "type": "String",
+            "defaultValue": "2024-07-18",
+            "type": "string",
             "metadata": {
                 "description": "Azure OpenAI GPT 4 Mini Model Version"
             }
         },
         "embeddingCapacity": {
-            "defaultValue": 120,
+            "defaultValue": 10,
             "type": "Int",
             "metadata": {
                 "description": "The capacity for embedding model in TPM"
             }
         }
-    },  
+    },
     "variables": {
         // "languageServiceName": "[concat(parameters('botServiceName'), '-lang')]",
         "botDisplayName": "[if(empty(parameters('displayName')), parameters('botId'), parameters('displayName'))]",
@@ -430,10 +439,9 @@
                 "capacity": 1
             },
             "properties": {
-                "reserved": true  // Set to true for Linux plans
+                "reserved": true // Set to true for Linux plans
             }
         },
-        
         // Frontend Web App
         {
             "type": "Microsoft.Web/sites",
@@ -445,9 +453,19 @@
             ],
             "kind": "app,linux",
             "properties": {
+                "httpsOnly": true,
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
-                    "appSettings": "[parameters('appSettings')]",
+                   "appSettings": [
+                        {
+                            "name": "WEBSITES_PORT",
+                            "value": "3000"
+                        },
+                        {
+                            "name": "PORT",
+                            "value": "3000"
+                        }
+                    ],
                     "linuxFxVersion": "NODE|20-lts",
                     "appCommandLine": "npx serve -s dist -l 3000",
                     "managedPipelineMode": "Integrated"
@@ -474,8 +492,8 @@
                 }
             }
         },
-         // ServerWeb App
-         {
+        // ServerWeb App
+        {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2023-12-01",
             "name": "[parameters('serverwebAppName')]",
@@ -485,10 +503,21 @@
             ],
             "kind": "app,linux",
             "properties": {
+                "httpsOnly": true,
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
-                    "appSettings": "[parameters('serverappSettings')]",
-                    "linuxFxVersion": "NODE|20-lts",
+                    "appSettings": [
+                        {
+                            "name": "WEBSITES_PORT",
+                            "value": "4000"
+                        },
+                        {
+                            "name": "PORT",
+                            "value": "4000"
+                        }
+                    ],
+                    // "appSettings": "[parameters('serverappSettings')]",
+                    "linuxFxVersion": "NODE|18-lts",
                     "appCommandLine": " npm run dev",
                     "managedPipelineMode": "Integrated"
                 }
@@ -525,12 +554,99 @@
             ],
             "kind": "app,linux",
             "properties": {
+                "httpsOnly": true,
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
-                    "appSettings": "[parameters('backendappSettings')]",
-                    "linuxFxVersion": "PYTHON|3.9",
-                    "appCommandLine": "gunicorn --bind 0.0.0.0 --worker-class aiohttp.worker.GunicornWebWorker --timeout 600 app:APP"
-                    
+                    "appSettings": [
+                        {
+                            "name": "PORT",
+                            "value": "8181"
+                        },
+                        {
+                            "name": "WEBSITES_PORT",
+                            "value": "8181"
+                        },
+                        {
+                            "name": "OpenAIEndpoint",
+                            "value": "[concat('https://', parameters('openAiName'), '.openai.azure.com')]"
+                        },
+                        {
+                            "name": "MicrosoftAppId",
+                            "value": "[parameters('msAppId')]"
+                        },
+                        {
+                            "name": "MicrosoftAppPassword",
+                            "value": "[parameters('secretContentType')]"
+                        },
+                        {
+                            "name": "Database_UserName",
+                            "value": "[parameters('administratorLogin')]"
+                        },
+                        {
+                            "name": "Database_Port",
+                            "value": "5423"
+                        },
+                        {
+                            "name": "Database_Password",
+                            "value": "[parameters('administratorLoginPassword')]"
+                        },
+                        {
+                            "name": "Database_Host",
+                            "value": "[parameters('postgresServerName')]"
+                        },
+                        {
+                            "name":"ConnectionName",
+                            "value":"auth"
+                        },
+                        {
+                            "name":"Clu_Sensitivity",
+                            "value":"0.95"
+                        },
+                        {
+                            "name":"AzureSearchSemanticConfig",
+                            "value":""
+                        },
+                        {
+                            "name":"AZURE_SEARCH_SERVICE_ENDPOINT",
+                            "value": "[format('https://{0}.search.windows.net',  parameters('searchServiceName'))]"
+                        },
+                        {
+                            "name":"AZURE_SEARCH_API_KEY",
+                            "value": "[listAdminKeys(format('Microsoft.Search/searchServices/{0}', parameters('searchServiceName')), '2021-04-01-preview').primaryKey]"
+
+                        },
+                        {
+                            "name":"AZURE_SEARCH_INDEX_NAME",
+                            "value":"dootindex"
+                        },
+                        {
+                            "name":"AZURE_OPENAI_KEY",
+                            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName')), '2023-05-01').key1]"
+                        },
+                        {
+                            "name":"Azure_Model_Deployment_Name",
+                            "value":"[parameters('AzureOpenAIGPT4ominiModelName')]"
+                        },
+                        {
+                            "name":"Azure_Embeddeing_Model",
+                            "value":"text-embedding-ada-002"
+                        },
+                        {
+                            "name":"AZURE_CONVERSATIONS_PROJECT_NAME",
+                            "value":"Axis_Bank_Bot_test_CLU"
+                        },
+                        {
+                            "name":"AZURE_CONVERSATIONS_KEY",
+                            "value":""
+                        },
+                        {   
+                            "name":"API_Version",
+                            "value":"2024-02-15-preview"
+                        }
+
+                    ],
+                    "linuxFxVersion": "PYTHON|3.11",
+                    "appCommandLine": "gunicorn --bind 0.0.0.0:8181 --worker-class aiohttp.worker.GunicornWebWorker --timeout 600 app:APP"
                 }
             }
         },
@@ -647,7 +763,7 @@
                     ],
                     "outputs": {
                         "identityResource": {
-                            "type": "Object",
+                            "type": "object",
                             "value": "[reference(parameters('identityResourceID'))]"
                         }
                     }
@@ -676,7 +792,7 @@
                 "msaAppMSIResourceId": "[if(equals(parameters('appType'), 'UserAssignedMSI'), variables('identityResourceID'), parameters('msiResourceId'))]",
                 "openWithHint": "",
                 "appPasswordHint": "",
-                "endpoint": ""
+                "endpoint": "[concat('https://', parameters('backendwebAppName'), '.azurewebsites.net/api/messages')]"
             }
         },
         // search service
@@ -718,83 +834,42 @@
             "kind": "OpenAI",
             "properties": {
                 "customSubDomainName": "[parameters('openAiName')]",
-                "publicNetworkAccess": "Enabled"
+                 "publicNetworkAccess": "Enabled"
             }
         },
-        //  // open ai acc for gpt4o
-        {
-            "type": "Microsoft.CognitiveServices/accounts",
-            "apiVersion": "2023-10-01-preview",
-            "name": "[parameters('openAiNamenext')]",
-            "location": "[parameters('openAiLocation')]",
-            "sku": {
-                "name": "S0"
-            },
-            "kind": "OpenAI",
-            "properties": {
-                "customSubDomainName": "[parameters('openAiNamenext')]",
-                "publicNetworkAccess": "Enabled"
-            }
-        },
+        // //  // open ai acc for gpt4o
+        // {
+        //     "type": "Microsoft.CognitiveServices/accounts",
+        //     "apiVersion": "2023-10-01-preview",
+        //     "name": "[parameters('openAiNamenext')]",
+        //     "location": "[parameters('openAiLocation')]",
+        //     "sku": {
+        //         "name": "S0"
+        //     },
+        //     "kind": "OpenAI",
+        //     "properties": {
+        //         "customSubDomainName": "[parameters('openAiNamenext')]",
+        //         "publicNetworkAccess": "Enabled"
+        //     }
+        // },
         //  open ai acc for gpt4o-mini
-        {
-            "type": "Microsoft.CognitiveServices/accounts",
-            "apiVersion": "2023-10-01-preview",
-            "name": "[parameters('openAiNameforgpt40mini')]",
-            "location": "[parameters('openAiLocation')]",
-            "sku": {
-                "name": "S0"
-            },
-            "kind": "OpenAI",
-            "properties": {
-                "customSubDomainName": "[parameters('openAiNameforgpt40mini')]",
-                "publicNetworkAccess": "Enabled"
-            }
-        },
-        // open ai gpt 4omini
-        {
-            "type": "Microsoft.CognitiveServices/accounts/deployments",
-            "apiVersion": "2023-10-01-preview",
-            "name": "[concat(parameters('openAiNameforgpt40mini'), '/gpt-4o-mini')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiNameforgpt40mini'))]"
-            ],
-            "sku": {
-                "name": "GlobalStandard",
-                "capacity": "[parameters('gpt4Capacity')]"
-            },
-            "properties": {
-                "model": {
-                    "format": "OpenAI",
-                    "name": "[parameters('AzureOpenAIGPT4ominiModelName')]",
-                    "version": "[parameters('AzureOpenAIGPT4ominiModelVersion')]"
-                },
-                "raiPolicyName": "Microsoft.Default"
-            }
-        },
-        //  open ai gpt 4o
-        {
-            "type": "Microsoft.CognitiveServices/accounts/deployments",
-            "apiVersion": "2023-10-01-preview",
-            "name": "[concat(parameters('openAiNamenext'), '/gpt-4o')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiNamenext'))]"
-            ],
-            "sku": {
-                "name": "GlobalStandard",
-                "capacity": "[parameters('gpt4Capacity')]"
-            },
-            "properties": {
-                "model": {
-                    "format": "OpenAI",
-                    "name": "[parameters('AzureOpenAIGPT4ModelName')]",
-                    "version": "[parameters('AzureOpenAIGPT4ModelVersion')]"
-                },
-                "raiPolicyName": "Microsoft.Default"
-            }
-        },
-        //  open ai text-embedding-ada-002
-        {
+        // {
+        //     "type": "Microsoft.CognitiveServices/accounts",
+        //     "apiVersion": "2023-10-01-preview",
+        //     "name": "[parameters('openAiNameforgpt40mini')]",
+        //     "location": "[parameters('openAiLocation')]",
+        //     "sku": {
+        //         "name": "S0"
+        //     },
+        //     "kind": "OpenAI",
+        //     "properties": {
+        //         "customSubDomainName": "[parameters('openAiNameforgpt40mini')]",
+        //         "publicNetworkAccess": "Enabled"
+        //     }
+        // },
+
+          //  open ai text-embedding-ada-002
+          {
             "type": "Microsoft.CognitiveServices/accounts/deployments",
             "apiVersion": "2023-10-01-preview",
             "name": "[concat(parameters('openAiName'), '/text-embedding-ada-002')]",
@@ -814,29 +889,74 @@
                 "raiPolicyName": "Microsoft.Default"
             }
         },
-      
-        // AAD Deployment Script
+        // open ai gpt 4omini
         {
-            "type": "Microsoft.Resources/deploymentScripts",
-            "apiVersion": "2020-10-01",
-            "name": "aadAppRegistrationScript",
-            "location": "[parameters('location')]",
-            "kind": "AzureCLI",
-            "identity": {
-                "type": "UserAssigned",
-                "userAssignedIdentities": {
-                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identity'))]": {}
-                }
+            "type": "Microsoft.CognitiveServices/accounts/deployments",
+            "apiVersion": "2023-10-01-preview",
+            "name": "[format('{0}/{1}',parameters('openAiName'), 'gpt-4o-mini')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]"
+                // "[resourceId('Microsoft.CognitiveServices/accounts/deployments', parameters('openAiName'), '/text-embedding-ada-002'))]"
+                // "[resourceId('Microsoft.CognitiveServices/accounts/deployments', concat(parameters('openAiName'), '/text-embedding-ada-002'))]"
+            ],
+            "sku": {
+                "name": "GlobalStandard",
+                "capacity": "[parameters('gpt4Capacity')]"
             },
             "properties": {
-              "AzCliVersion": "2.0.80",
-              "timeout": "PT30M",
-              "scriptContent": "$APP_NAME = \"[parameters('aadAppName')]\"\n$SECRET_NAME = \"Client Secret\"\n\n$aadApp = New-AzADApplication -DisplayName $APP_NAME\n$APP_ID = $aadApp.ApplicationId\nWrite-Host \"App Registration created with App ID: $APP_ID\"\n\n$SECRET = New-AzADAppCredential -ObjectId $aadApp.Id -DisplayName $SECRET_NAME\n$SECRET_VALUE = $SECRET.SecretText\nWrite-Host \"Client secret created with value: $SECRET_VALUE\"\n\n$apiPermission = New-AzADAppPermission -ObjectId $aadApp.Id -Api '00000003-0000-0000-c000-000000000000' -Permission \"User.Read\"\nGrant-AzADAppPermission -ObjectId $aadApp.Id -Api '00000003-0000-0000-c000-000000000000'\n\nWrite-Host \"App Registration Name: $APP_NAME\"\nWrite-Host \"App ID: $APP_ID\"\nWrite-Host \"Client Secret: $SECRET_VALUE\"",
-              "arguments": "",
-              "retentionInterval": "P1D",
-              "cleanupPreference": "Always"
+                "model": {
+                    "format": "OpenAI",
+                    "name": "[parameters('AzureOpenAIGPT4ominiModelName')]",
+                    "version": "[parameters('AzureOpenAIGPT4ominiModelVersion')]"
+                }
+                // "raiPolicyName": "Microsoft.Default"
             }
         }
-          
-        ]
-      }
+        
+        //  open ai gpt 4o
+        // {
+        //     "type": "Microsoft.CognitiveServices/accounts/deployments",
+        //     "apiVersion": "2023-10-01-preview",
+        //     "name": "[concat(parameters('openAiName'), '/gpt-4o')]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.CognitiveServices/accounts/deployments', concat(parameters('openAiName'), '/text-embedding-ada-002'))]"
+        //     ],
+        //     "sku": {
+        //         "name": "GlobalStandard",
+        //         "capacity": "[parameters('gpt4Capacity')]"
+        //     },
+        //     "properties": {
+        //         "model": {
+        //             "format": "OpenAI",
+        //             "name": "[parameters('AzureOpenAIGPT4ModelName')]",
+        //             "version": "[parameters('AzureOpenAIGPT4ModelVersion')]"
+        //         },
+        //         "raiPolicyName": "Microsoft.Default"
+        //     }
+        // },
+      
+        
+        // AAD Deployment Script
+        // {
+        //     "type": "Microsoft.Resources/deploymentScripts",
+        //     "apiVersion": "2020-10-01",
+        //     "name": "aadAppRegistrationScript",
+        //     "location": "[parameters('location')]",
+        //     "kind": "AzureCLI",
+        //     "identity": {
+        //         "type": "UserAssigned",
+        //         "userAssignedIdentities": {
+        //             "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identity'))]": {}
+        //         }
+        //     },
+        //     "properties": {
+        //       "AzCliVersion": "2.0.80",
+        //       "timeout": "PT30M",
+        //       "scriptContent": "$APP_NAME = \"[parameters('aadAppName')]\"\n$SECRET_NAME = \"Client Secret\"\n\n$aadApp = New-AzADApplication -DisplayName $APP_NAME\n$APP_ID = $aadApp.ApplicationId\nWrite-Host \"App Registration created with App ID: $APP_ID\"\n\n$SECRET = New-AzADAppCredential -objectId $aadApp.Id -DisplayName $SECRET_NAME\n$SECRET_VALUE = $SECRET.SecretText\nWrite-Host \"Client secret created with value: $SECRET_VALUE\"\n\n$apiPermission = New-AzADAppPermission -objectId $aadApp.Id -Api '00000003-0000-0000-c000-000000000000' -Permission \"User.Read\"\nGrant-AzADAppPermission -objectId $aadApp.Id -Api '00000003-0000-0000-c000-000000000000'\n\nWrite-Host \"App Registration Name: $APP_NAME\"\nWrite-Host \"App ID: $APP_ID\"\nWrite-Host \"Client Secret: $SECRET_VALUE\"",
+        //       "arguments": "",
+        //       "retentionInterval": "P1D",
+        //       "cleanupPreference": "Always"
+        //     }
+        // }
+    ]
+}
