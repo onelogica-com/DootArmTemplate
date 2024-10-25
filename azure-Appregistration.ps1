@@ -27,7 +27,7 @@ if ($identity) {
     $principalId = $identity.PrincipalId
     
     # Assign the Reader role
-    az role assignment create --assignee $principalId --role "Reader" --scope "/subscriptions/$subscriptionId"
+    az role assignment create --assignee  "c29bed4d-ebd7-4024-9dbc-0196a2ced3c8"  --role "Reader" --scope "/subscriptions/$subscriptionId"
     Write-Output "Assigned 'Reader' role to the managed identity: $managedIdentityName"
 } else {
     Write-Output "Managed Identity not found: $managedIdentityName"
