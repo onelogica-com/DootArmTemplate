@@ -73,7 +73,7 @@
         },
         "serverrepositoryUrl": {
             "type": "string",
-            "defaultValue": "https://github.com/anshupal667/serverglambot.git",
+            "defaultValue": "https://github.com/onelogica-com/dootserver",
             "metadata": {
                 "description": "The GitHub repository URL of frontend server"
             }
@@ -414,7 +414,56 @@
             "metadata": {
                 "description": "The capacity for embedding model in TPM"
             }
+        },
+     "SERVICE_NAME": {
+      "defaultValue": "[format('{0}servicename', parameters('ResourcePrefix'))]",
+      "type": "string",
+      "metadata": {
+        "description": "The service name for the app."
+      }
+    },
+    "INDEX_NAME": {
+     "defaultValue": "[format('{0}dootindex', parameters('ResourcePrefix'))]",
+      "type": "string",
+      "metadata": {
+        "description": "The index name for the app."
+      }
+    },
+   
+    "INDEXER_NAME": {
+      "defaultValue": "[format('{0}dootindexer', parameters('ResourcePrefix'))]",
+      "type": "string",
+      "metadata": {
+        "description": "The indexer name for the app."
+      }
+    },
+    // "TARGET_INDEX_NAME": {
+    //   "type": "string",
+    //   "metadata": {
+    //     "description": "The target index name for the app."
+    //   }
+    // },
+    "SKILLSET_NAME": {
+      "defaultValue": "[format('{0}skillset', parameters('ResourcePrefix'))]",
+      "type": "string",
+      "metadata": {
+        "description": "The skillset name for the app."
+      }
+    },
+    "StorageAccountName": {
+        "defaultValue": "[format('{0}storage', parameters('ResourcePrefix'))]",
+        "type": "string",
+        "metadata": {
+            "description": "Name of the storage account."
         }
+    },
+    "BlobContainerName": {
+        "defaultValue": "[format('{0}container', parameters('ResourcePrefix'))]",
+        "type": "string",
+        "metadata": {
+            "description": "Name of the blob container."
+        }
+    }
     },
     "variables": {
         // "languageServiceName": "[concat(parameters('botServiceName'), '-lang')]",
@@ -426,6 +475,44 @@
         "botTags": "[if(contains(parameters('resourceTags'), 'Microsoft.BotService/botServices'), parameters('resourceTags')['Microsoft.BotService/botServices'], variables('empty'))]"
     },
     "resources": [
+          // Storage Account
+          {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2023-01-01",
+            "name": "[parameters('StorageAccountName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            }
+        },
+        // Queue Service
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2023-01-01",
+            "name": "[format('{0}/{1}', parameters('StorageAccountName'), 'default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('StorageAccountName'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        // Blob Container
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2023-01-01",
+            "name": "[format('{0}/default/{1}', parameters('StorageAccountName'), parameters('BlobContainerName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('StorageAccountName'))]"
+            ],
+            "properties": {
+                "publicAccess": "none"
+            }
+        },
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2023-12-01",
@@ -464,6 +551,38 @@
                         {
                             "name": "PORT",
                             "value": "3000"
+                        },
+                        {
+                            "name":"REACT_APP_SERVICE_NAME",
+                            "value":"[parameters('SERVICE_NAME')]"
+                        },
+                        {
+                            "name":"REACT_APP_INDEX_NAME",
+                            "value":"[parameters('INDEX_NAME')]"
+                        },
+                        {
+                            "name":"REACT_APP_SOURCE_TYPE",
+                            "value":"azureblob"
+                        },
+                        {
+                            "name":"REACT_APP_DATA_SOURCE_NAME",
+                            "value":"[parameters('StorageAccountName')]"
+                        },
+                        {
+                            "name":"REACT_APP_CONTAINER_NAME",
+                            "value":"[parameters('BlobContainerName')]"
+                        },
+                        {
+                            "name":"REACT_APP_INDEXER_NAME",
+                            "value":"[parameters('INDEXER_NAME')]"
+                        },
+                        {
+                            "name":"REACT_APP_TARGET_INDEX_NAME",
+                            "value":"[parameters('INDEX_NAME')]"
+                        },
+                        {
+                            "name":"REACT_APP_SKILLSET_NAME",
+                            "value":"[parameters('SKILLSET_NAME')]"
                         }
                     ],
                     "linuxFxVersion": "NODE|20-lts",
@@ -509,11 +628,39 @@
                     "appSettings": [
                         {
                             "name": "WEBSITES_PORT",
-                            "value": "4000"
+                            "value": "3001"
                         },
                         {
                             "name": "PORT",
-                            "value": "4000"
+                            "value": "3001"
+                        },
+                        {
+                            "name":"DEPLOYMENTID",
+                            "value":"text-embedding-ada-002"
+                        },
+                        {
+                            "name":"OPENAI_APIKEY",
+                            "value":"[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName')), '2023-05-01').key1]"
+                        },
+                        {
+                            "name":"openai_name",
+                            "value":"parameters('openAiName')"
+                        },
+                        {
+                            "name":"SEARCH_API_KEY",
+                             "value": "[listAdminKeys(format('Microsoft.Search/searchServices/{0}', parameters('searchServiceName')), '2021-04-01-preview').primaryKey]"
+                        },
+                        {
+                            "name":"SEARCH_SVC_NAME",
+                            "value":"parameters('searchServiceName'))]"
+                        },
+                        {
+                            "name":"DIRECTLINETOKEN",
+                            "value":""
+                        },
+                        {
+                            "name": "CONNECTIONSTRING",
+                            "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('StorageAccountName')), '2019-06-01').keys[0].value]"
                         }
                     ],
                     // "appSettings": "[parameters('serverappSettings')]",
@@ -604,7 +751,7 @@
                         },
                         {
                             "name":"AzureSearchSemanticConfig",
-                            "value":""
+                            "value":"doot-semantic-config"
                         },
                         {
                             "name":"AZURE_SEARCH_SERVICE_ENDPOINT",
@@ -642,7 +789,12 @@
                         {   
                             "name":"API_Version",
                             "value":"2024-02-15-preview"
-                        }
+                        },
+                        {
+                            "name":"WEBSITE_HTTPLOGGING_RETENTION_DAYS",
+                            "value":"1"
+                        },
+                        
 
                     ],
                     "linuxFxVersion": "PYTHON|3.11",
