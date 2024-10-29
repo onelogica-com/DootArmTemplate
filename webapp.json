@@ -793,7 +793,7 @@
                         {
                             "name":"WEBSITE_HTTPLOGGING_RETENTION_DAYS",
                             "value":"1"
-                        },
+                        }
                         
 
                     ],
