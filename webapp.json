@@ -380,20 +380,20 @@
                 "description": "The capacity for GPT-4 models in TPM (Tokens Per Minute)"
             }
         },
-        "AzureOpenAIGPT4ModelVersion": {
-            "defaultValue": "2024-05-13",
-            "type": "string",
-            "metadata": {
-                "description": "Azure OpenAI GPT 4 Model Version"
-            }
-        },
-        "AzureOpenAIGPT4ModelName": {
-            "defaultValue": "gpt-4o",
-            "type": "string",
-            "metadata": {
-                "description": "Azure OpenAI GPT 4 Model Name"
-            }
-        },
+        // "AzureOpenAIGPT4ModelVersion": {
+        //     "defaultValue": "2024-05-13",
+        //     "type": "string",
+        //     "metadata": {
+        //         "description": "Azure OpenAI GPT 4 Model Version"
+        //     }
+        // },
+        // "AzureOpenAIGPT4ModelName": {
+        //     "defaultValue": "gpt-4o",
+        //     "type": "string",
+        //     "metadata": {
+        //         "description": "Azure OpenAI GPT 4 Model Name"
+        //     }
+        // },
         "AzureOpenAIGPT4ominiModelName": {
             "defaultValue": "gpt-4o-mini",
             "type": "string",
@@ -553,6 +553,10 @@
                             "value": "3000"
                         },
                         {
+                            "name":"REACT_APP_API",
+                            "vlaue":"[concat('https://', parameters('serverwebAppName'), '.azurewebsites.net')]"
+                        }
+                        {
                             "name":"REACT_APP_SERVICE_NAME",
                             "value":"[parameters('SERVICE_NAME')]"
                         },
@@ -665,7 +669,7 @@
                     ],
                     // "appSettings": "[parameters('serverappSettings')]",
                     "linuxFxVersion": "NODE|18-lts",
-                    "appCommandLine": " npm run dev",
+                    "appCommandLine": " node index.js",
                     "managedPipelineMode": "Integrated"
                 }
             }
