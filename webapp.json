@@ -359,20 +359,6 @@
                 "description": "The name of the OpenAI service"
             }
         },
-        // "openAiNamenext": {
-        //     "type": "string",
-        //     "defaultValue": "[format('{0}gpt4o', parameters('ResourcePrefix'))]",
-        //     "metadata": {
-        //         "description": "The name of the OpenAI service"
-        //     }
-        // },
-        // "openAiNameforgpt40mini":{
-        //     "type": "string",
-        //     "defaultValue": "[format('{0}gpt4omini', parameters('ResourcePrefix'))]",
-        //     "metadata": {
-        //         "description": "The name of the OpenAI service"
-        //     }
-        // },
         "gpt4Capacity": {
             "defaultValue": 10,
             "type": "int",
@@ -380,20 +366,6 @@
                 "description": "The capacity for GPT-4 models in TPM (Tokens Per Minute)"
             }
         },
-        // "AzureOpenAIGPT4ModelVersion": {
-        //     "defaultValue": "2024-05-13",
-        //     "type": "string",
-        //     "metadata": {
-        //         "description": "Azure OpenAI GPT 4 Model Version"
-        //     }
-        // },
-        // "AzureOpenAIGPT4ModelName": {
-        //     "defaultValue": "gpt-4o",
-        //     "type": "string",
-        //     "metadata": {
-        //         "description": "Azure OpenAI GPT 4 Model Name"
-        //     }
-        // },
         "AzureOpenAIGPT4ominiModelName": {
             "defaultValue": "gpt-4o-mini",
             "type": "string",
@@ -415,55 +387,48 @@
                 "description": "The capacity for embedding model in TPM"
             }
         },
-     "SERVICE_NAME": {
-      "defaultValue": "[format('{0}servicename', parameters('ResourcePrefix'))]",
-      "type": "string",
-      "metadata": {
-        "description": "The service name for the app."
-      }
-    },
-    "INDEX_NAME": {
-     "defaultValue": "[format('{0}dootindex', parameters('ResourcePrefix'))]",
-      "type": "string",
-      "metadata": {
-        "description": "The index name for the app."
-      }
-    },
-   
-    "INDEXER_NAME": {
-      "defaultValue": "[format('{0}dootindexer', parameters('ResourcePrefix'))]",
-      "type": "string",
-      "metadata": {
-        "description": "The indexer name for the app."
-      }
-    },
-    // "TARGET_INDEX_NAME": {
-    //   "type": "string",
-    //   "metadata": {
-    //     "description": "The target index name for the app."
-    //   }
-    // },
-    "SKILLSET_NAME": {
-      "defaultValue": "[format('{0}skillset', parameters('ResourcePrefix'))]",
-      "type": "string",
-      "metadata": {
-        "description": "The skillset name for the app."
-      }
-    },
-    "StorageAccountName": {
-        "defaultValue": "[format('{0}storage', parameters('ResourcePrefix'))]",
-        "type": "string",
-        "metadata": {
-            "description": "Name of the storage account."
+        "SERVICE_NAME": {
+            "defaultValue": "[format('{0}servicename', parameters('ResourcePrefix'))]",
+            "type": "string",
+            "metadata": {
+                "description": "The service name for the app."
+            }
+        },
+        "INDEX_NAME": {
+            "defaultValue": "[format('{0}dootindex', parameters('ResourcePrefix'))]",
+            "type": "string",
+            "metadata": {
+                "description": "The index name for the app."
+            }
+        },
+        "INDEXER_NAME": {
+            "defaultValue": "[format('{0}dootindexer', parameters('ResourcePrefix'))]",
+            "type": "string",
+            "metadata": {
+                "description": "The indexer name for the app."
+            }
+        },
+        "SKILLSET_NAME": {
+            "defaultValue": "[format('{0}skillset', parameters('ResourcePrefix'))]",
+            "type": "string",
+            "metadata": {
+                "description": "The skillset name for the app."
+            }
+        },
+        "StorageAccountName": {
+            "defaultValue": "[format('{0}storage', parameters('ResourcePrefix'))]",
+            "type": "string",
+            "metadata": {
+                "description": "Name of the storage account."
+            }
+        },
+        "BlobContainerName": {
+            "defaultValue": "[format('{0}container', parameters('ResourcePrefix'))]",
+            "type": "string",
+            "metadata": {
+                "description": "Name of the blob container."
+            }
         }
-    },
-    "BlobContainerName": {
-        "defaultValue": "[format('{0}container', parameters('ResourcePrefix'))]",
-        "type": "string",
-        "metadata": {
-            "description": "Name of the blob container."
-        }
-    }
     },
     "variables": {
         // "languageServiceName": "[concat(parameters('botServiceName'), '-lang')]",
@@ -475,8 +440,8 @@
         "botTags": "[if(contains(parameters('resourceTags'), 'Microsoft.BotService/botServices'), parameters('resourceTags')['Microsoft.BotService/botServices'], variables('empty'))]"
     },
     "resources": [
-          // Storage Account
-          {
+        // Storage Account
+        {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2023-01-01",
             "name": "[parameters('StorageAccountName')]",
@@ -543,7 +508,7 @@
                 "httpsOnly": true,
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
-                   "appSettings": [
+                    "appSettings": [
                         {
                             "name": "WEBSITES_PORT",
                             "value": "3000"
@@ -553,40 +518,40 @@
                             "value": "3000"
                         },
                         {
-                            "name":"REACT_APP_API",
-                            "vlaue":"[concat('https://', parameters('serverwebAppName'), '.azurewebsites.net')]"
-                        }
-                        {
-                            "name":"REACT_APP_SERVICE_NAME",
-                            "value":"[parameters('SERVICE_NAME')]"
+                            "name": "REACT_APP_API",
+                            "vlaue": "[concat('https://', parameters('serverwebAppName'), '.azurewebsites.net')]"
                         },
                         {
-                            "name":"REACT_APP_INDEX_NAME",
-                            "value":"[parameters('INDEX_NAME')]"
+                            "name": "REACT_APP_SERVICE_NAME",
+                            "value": "[parameters('SERVICE_NAME')]"
                         },
                         {
-                            "name":"REACT_APP_SOURCE_TYPE",
-                            "value":"azureblob"
+                            "name": "REACT_APP_INDEX_NAME",
+                            "value": "[parameters('INDEX_NAME')]"
                         },
                         {
-                            "name":"REACT_APP_DATA_SOURCE_NAME",
-                            "value":"[parameters('StorageAccountName')]"
+                            "name": "REACT_APP_SOURCE_TYPE",
+                            "value": "azureblob"
                         },
                         {
-                            "name":"REACT_APP_CONTAINER_NAME",
-                            "value":"[parameters('BlobContainerName')]"
+                            "name": "REACT_APP_DATA_SOURCE_NAME",
+                            "value": "[parameters('StorageAccountName')]"
                         },
                         {
-                            "name":"REACT_APP_INDEXER_NAME",
-                            "value":"[parameters('INDEXER_NAME')]"
+                            "name": "REACT_APP_CONTAINER_NAME",
+                            "value": "[parameters('BlobContainerName')]"
                         },
                         {
-                            "name":"REACT_APP_TARGET_INDEX_NAME",
-                            "value":"[parameters('INDEX_NAME')]"
+                            "name": "REACT_APP_INDEXER_NAME",
+                            "value": "[parameters('INDEXER_NAME')]"
                         },
                         {
-                            "name":"REACT_APP_SKILLSET_NAME",
-                            "value":"[parameters('SKILLSET_NAME')]"
+                            "name": "REACT_APP_TARGET_INDEX_NAME",
+                            "value": "[parameters('INDEX_NAME')]"
+                        },
+                        {
+                            "name": "REACT_APP_SKILLSET_NAME",
+                            "value": "[parameters('SKILLSET_NAME')]"
                         }
                     ],
                     "linuxFxVersion": "NODE|20-lts",
@@ -639,28 +604,28 @@
                             "value": "3001"
                         },
                         {
-                            "name":"DEPLOYMENTID",
-                            "value":"text-embedding-ada-002"
+                            "name": "DEPLOYMENTID",
+                            "value": "text-embedding-ada-002"
                         },
                         {
-                            "name":"OPENAI_APIKEY",
-                            "value":"[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName')), '2023-05-01').key1]"
+                            "name": "OPENAI_APIKEY",
+                            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName')), '2023-05-01').key1]"
                         },
                         {
-                            "name":"openai_name",
-                            "value":"parameters('openAiName')"
+                            "name": "openai_name",
+                            "value": "parameters('openAiName')"
                         },
                         {
-                            "name":"SEARCH_API_KEY",
-                             "value": "[listAdminKeys(format('Microsoft.Search/searchServices/{0}', parameters('searchServiceName')), '2021-04-01-preview').primaryKey]"
+                            "name": "SEARCH_API_KEY",
+                            "value": "[listAdminKeys(format('Microsoft.Search/searchServices/{0}', parameters('searchServiceName')), '2021-04-01-preview').primaryKey]"
                         },
                         {
-                            "name":"SEARCH_SVC_NAME",
-                            "value":"parameters('searchServiceName'))]"
+                            "name": "SEARCH_SVC_NAME",
+                            "value": "parameters('searchServiceName'))]"
                         },
                         {
-                            "name":"DIRECTLINETOKEN",
-                            "value":""
+                            "name": "DIRECTLINETOKEN",
+                            "value": ""
                         },
                         {
                             "name": "CONNECTIONSTRING",
@@ -746,60 +711,57 @@
                             "value": "[parameters('postgresServerName')]"
                         },
                         {
-                            "name":"ConnectionName",
-                            "value":"auth"
+                            "name": "ConnectionName",
+                            "value": "auth"
                         },
                         {
-                            "name":"Clu_Sensitivity",
-                            "value":"0.95"
+                            "name": "Clu_Sensitivity",
+                            "value": "0.95"
                         },
                         {
-                            "name":"AzureSearchSemanticConfig",
-                            "value":"doot-semantic-config"
+                            "name": "AzureSearchSemanticConfig",
+                            "value": "doot-semantic-config"
                         },
                         {
-                            "name":"AZURE_SEARCH_SERVICE_ENDPOINT",
+                            "name": "AZURE_SEARCH_SERVICE_ENDPOINT",
                             "value": "[format('https://{0}.search.windows.net',  parameters('searchServiceName'))]"
                         },
                         {
-                            "name":"AZURE_SEARCH_API_KEY",
+                            "name": "AZURE_SEARCH_API_KEY",
                             "value": "[listAdminKeys(format('Microsoft.Search/searchServices/{0}', parameters('searchServiceName')), '2021-04-01-preview').primaryKey]"
-
                         },
                         {
-                            "name":"AZURE_SEARCH_INDEX_NAME",
-                            "value":"dootindex"
+                            "name": "AZURE_SEARCH_INDEX_NAME",
+                            "value": "dootindex"
                         },
                         {
-                            "name":"AZURE_OPENAI_KEY",
+                            "name": "AZURE_OPENAI_KEY",
                             "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName')), '2023-05-01').key1]"
                         },
                         {
-                            "name":"Azure_Model_Deployment_Name",
-                            "value":"[parameters('AzureOpenAIGPT4ominiModelName')]"
+                            "name": "Azure_Model_Deployment_Name",
+                            "value": "[parameters('AzureOpenAIGPT4ominiModelName')]"
                         },
                         {
-                            "name":"Azure_Embeddeing_Model",
-                            "value":"text-embedding-ada-002"
+                            "name": "Azure_Embeddeing_Model",
+                            "value": "text-embedding-ada-002"
                         },
                         {
-                            "name":"AZURE_CONVERSATIONS_PROJECT_NAME",
-                            "value":"Axis_Bank_Bot_test_CLU"
+                            "name": "AZURE_CONVERSATIONS_PROJECT_NAME",
+                            "value": "Axis_Bank_Bot_test_CLU"
                         },
                         {
-                            "name":"AZURE_CONVERSATIONS_KEY",
-                            "value":""
-                        },
-                        {   
-                            "name":"API_Version",
-                            "value":"2024-02-15-preview"
+                            "name": "AZURE_CONVERSATIONS_KEY",
+                            "value": ""
                         },
                         {
-                            "name":"WEBSITE_HTTPLOGGING_RETENTION_DAYS",
-                            "value":"1"
+                            "name": "API_Version",
+                            "value": "2024-02-15-preview"
+                        },
+                        {
+                            "name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
+                            "value": "1"
                         }
-                        
-
                     ],
                     "linuxFxVersion": "PYTHON|3.11",
                     "appCommandLine": "gunicorn --bind 0.0.0.0:8181 --worker-class aiohttp.worker.GunicornWebWorker --timeout 600 app:APP"
@@ -990,7 +952,7 @@
             "kind": "OpenAI",
             "properties": {
                 "customSubDomainName": "[parameters('openAiName')]",
-                 "publicNetworkAccess": "Enabled"
+                "publicNetworkAccess": "Enabled"
             }
         },
         // //  // open ai acc for gpt4o
@@ -1023,9 +985,8 @@
         //         "publicNetworkAccess": "Enabled"
         //     }
         // },
-
-          //  open ai text-embedding-ada-002
-          {
+        //  open ai text-embedding-ada-002
+        {
             "type": "Microsoft.CognitiveServices/accounts/deployments",
             "apiVersion": "2023-10-01-preview",
             "name": "[concat(parameters('openAiName'), '/text-embedding-ada-002')]",
@@ -1068,7 +1029,6 @@
                 // "raiPolicyName": "Microsoft.Default"
             }
         }
-        
         //  open ai gpt 4o
         // {
         //     "type": "Microsoft.CognitiveServices/accounts/deployments",
@@ -1090,8 +1050,6 @@
         //         "raiPolicyName": "Microsoft.Default"
         //     }
         // },
-      
-        
         // AAD Deployment Script
         // {
         //     "type": "Microsoft.Resources/deploymentScripts",
