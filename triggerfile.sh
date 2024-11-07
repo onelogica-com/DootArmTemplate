@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Prompt user for GitHub Token
-read -sp "Enter your GitHub Token: " GITHUB_TOKEN
+# Prompt user for GitHub Token
+echo "Please enter your GitHub Token: "
+read -sp "Token: " GITHUB_TOKEN
 echo
 
 # Replace these values for the first repository
