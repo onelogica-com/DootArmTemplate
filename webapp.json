@@ -31,7 +31,7 @@
         },
         "webAppName": {
             "type": "string",
-            "defaultValue": "frontendDoot",
+            "defaultValue": "Doot",
             "metadata": {
                 "description": "Name of the Web App"
             }
@@ -66,7 +66,7 @@
         },
         "serverwebAppName": {
             "type": "string",
-            "defaultValue": "[format('{0}serverwebapp', parameters('ResourcePrefix'))]",
+            "defaultValue": "dootserver",
             "metadata": {
                 "description": "Name of the frontend server Web App"
             }
@@ -101,7 +101,7 @@
         },
         "backendwebAppName": {
             "type": "string",
-            "defaultValue": "dootarmtempnewbackendwebapp",
+            "defaultValue": "dootbackendapi",
             "metadata": {
                 "description": "Name of the backend Web App"
             }
@@ -516,43 +516,8 @@
                         {
                             "name": "PORT",
                             "value": "3000"
-                        },
-                        {
-                            "name": "REACT_APP_API",
-                            "vlaue": "[concat('https://', parameters('serverwebAppName'), '.azurewebsites.net')]"
-                        },
-                        {
-                            "name": "REACT_APP_SERVICE_NAME",
-                            "value": "[parameters('SERVICE_NAME')]"
-                        },
-                        {
-                            "name": "REACT_APP_INDEX_NAME",
-                            "value": "[parameters('INDEX_NAME')]"
-                        },
-                        {
-                            "name": "REACT_APP_SOURCE_TYPE",
-                            "value": "azureblob"
-                        },
-                        {
-                            "name": "REACT_APP_DATA_SOURCE_NAME",
-                            "value": "[parameters('StorageAccountName')]"
-                        },
-                        {
-                            "name": "REACT_APP_CONTAINER_NAME",
-                            "value": "[parameters('BlobContainerName')]"
-                        },
-                        {
-                            "name": "REACT_APP_INDEXER_NAME",
-                            "value": "[parameters('INDEXER_NAME')]"
-                        },
-                        {
-                            "name": "REACT_APP_TARGET_INDEX_NAME",
-                            "value": "[parameters('INDEX_NAME')]"
-                        },
-                        {
-                            "name": "REACT_APP_SKILLSET_NAME",
-                            "value": "[parameters('SKILLSET_NAME')]"
                         }
+                       
                     ],
                     "linuxFxVersion": "NODE|20-lts",
                     "appCommandLine": "npx serve -s dist -l 3000",
@@ -630,6 +595,42 @@
                         {
                             "name": "CONNECTIONSTRING",
                             "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('StorageAccountName')), '2019-06-01').keys[0].value]"
+                        },
+                        {
+                            "name": "REACT_APP_API",
+                            "vlaue": "[concat('https://', parameters('serverwebAppName'), '.azurewebsites.net')]"
+                        },
+                        {
+                            "name": "REACT_APP_SERVICE_NAME",
+                            "value": "[parameters('SERVICE_NAME')]"
+                        },
+                        {
+                            "name": "REACT_APP_INDEX_NAME",
+                            "value": "[parameters('INDEX_NAME')]"
+                        },
+                        {
+                            "name": "REACT_APP_SOURCE_TYPE",
+                            "value": "azureblob"
+                        },
+                        {
+                            "name": "REACT_APP_DATA_SOURCE_NAME",
+                            "value": "[parameters('StorageAccountName')]"
+                        },
+                        {
+                            "name": "REACT_APP_CONTAINER_NAME",
+                            "value": "[parameters('BlobContainerName')]"
+                        },
+                        {
+                            "name": "REACT_APP_INDEXER_NAME",
+                            "value": "[parameters('INDEXER_NAME')]"
+                        },
+                        {
+                            "name": "REACT_APP_TARGET_INDEX_NAME",
+                            "value": "[parameters('INDEX_NAME')]"
+                        },
+                        {
+                            "name": "REACT_APP_SKILLSET_NAME",
+                            "value": "[parameters('SKILLSET_NAME')]"
                         }
                     ],
                     // "appSettings": "[parameters('serverappSettings')]",
