@@ -684,6 +684,14 @@
                             "value": "8181"
                         },
                         {
+                            "name":"AZURE_CONVERSATIONS_ENDPOINT",
+                            "value":"https://axis-bank-bot-language.cognitiveservices.azure.com"
+                        },
+                        {
+                            "name":"AZURE_CONVERSATIONS_DEPLOYMENT_NAME",
+                            "value":"AxisBankBot-Deployment"
+                        },
+                        {
                             "name": "OpenAIEndpoint",
                             "value": "[concat('https://', parameters('openAiName'), '.openai.azure.com')]"
                         },
@@ -912,6 +920,14 @@
                 "openWithHint": "",
                 "appPasswordHint": "",
                 "endpoint": "[concat('https://', parameters('backendwebAppName'), '.azurewebsites.net/api/messages')]"
+                // "setting":{
+                //     "name":"auth",
+                //     "serviceProvider":"Azure Active Directory v2",
+                //     "clientId":"[parameters('msAppId')]",
+                //     "clientSecret":"[parameters('secretContentType')]",
+                //     "scopes":"user.read,openid",
+                //     "tokenExchangeUrl":"https://token.botframework.com/.auth/web/redirect"
+                // }
             }
         },
         // search service
@@ -1003,8 +1019,8 @@
                     "format": "OpenAI",
                     "name": "text-embedding-ada-002",
                     "version": "2"
-                },
-                "raiPolicyName": "Microsoft.Default"
+                }
+                
             }
         },
         // open ai gpt 4omini
