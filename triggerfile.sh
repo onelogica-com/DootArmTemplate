@@ -6,6 +6,12 @@ echo "Please enter your GitHub Token: "
 read -sp "Token: " GITHUB_TOKEN
 echo
 
+# Verify that the token is provided
+if [ -z "$GITHUB_TOKEN" ]; then
+  echo "Error: No GitHub token provided. Exiting."
+  exit 1
+fi
+
 # Replace these values for the first repository
 OWNER_1="anshupal667"          # Replace with your GitHub username or organization for repo 1
 REPO_1="glambot"               # Replace with the first repository name
