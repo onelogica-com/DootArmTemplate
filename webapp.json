@@ -428,6 +428,13 @@
             "metadata": {
                 "description": "Name of the blob container."
             }
+        },
+        "AzureConversationKey": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Enter the of the language service."
+            }
         }
     },
     "variables": {
@@ -484,9 +491,9 @@
             "name": "[parameters('appServicePlanName')]",
             "location": "[parameters('location')]",
             "sku": {
-                "name": "P3v3",
+                "name": "P1v3",
                 "tier": "PremiumV3",
-                "size": "P3v3",
+                "size": "P1v3",
                 "family": "Pv3",
                 "capacity": 1
             },
@@ -672,6 +679,7 @@
             "kind": "app,linux",
             "properties": {
                 "httpsOnly": true,
+                "clientAffinityEnabled": false,
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
                     "appSettings": [
@@ -761,7 +769,7 @@
                         },
                         {
                             "name": "AZURE_CONVERSATIONS_KEY",
-                            "value": ""
+                            "value": "[parameters('AzureConversationKey')"
                         },
                         {
                             "name": "API_Version",
@@ -770,11 +778,37 @@
                         {
                             "name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
                             "value": "1"
+                        },
+                        {
+                             "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+                            "value": "1"
                         }
                     ],
                     "linuxFxVersion": "PYTHON|3.11",
                     "appCommandLine": "gunicorn --bind 0.0.0.0:8181 --worker-class aiohttp.worker.GunicornWebWorker --timeout 600 app:APP"
                 }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('backendwebAppName'), '/scm')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('backendwebAppName'))]"
+            ],
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('backendwebAppName'), '/ftp')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('backendwebAppName'))]"
+            ],
+            "properties": {
+                "allow": true
             }
         },
         // Backend GitHub Deployment
@@ -786,17 +820,48 @@
                 "[resourceId('Microsoft.Web/sites', parameters('backendwebAppName'))]"
             ],
             "properties": {
-                "repoUrl": "[parameters('backendrepositoryUrl')]",
+               "repoUrl": "[parameters('backendrepositoryUrl')]",
                 "branch": "[parameters('backendbranch')]",
-                "isManualIntegration": false,
-                "deploymentRollbackEnabled": true,
+                "IsManualIntegration": false,
+                "deploymentRollbackEnabled": false,
                 "isMercurial": false,
                 "isGitHubAction": true,
-                "githubActionConfiguration": {
-                    "githubPersonalAccessToken": "[parameters('backendgithubToken')]"
+                "gitHubActionConfiguration": {
+                    "generateWorkflowFile": true,
+                      "githubPersonalAccessToken": "[parameters('backendgithubToken')]",
+                       "workflowSettings": {
+                        "appType": "webapp",
+                        "publishType": "code",
+                        "os": "linux",
+                        "runtimeStack": "python",
+                        "workflowApiVersion": "2020-12-01",
+                        "slotName": "Production",
+                        "variables": {
+                            "runtimeVersion": "3.11"
+                        }
+                    }
                 }
             }
         },
+        // {
+        //     "type": "Microsoft.Web/sites/sourcecontrols",
+        //     "apiVersion": "2023-12-01",
+        //     "name": "[concat(parameters('backendwebAppName'), '/web')]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.Web/sites', parameters('backendwebAppName'))]"
+        //     ],
+        //     "properties": {
+        //         "repoUrl": "[parameters('backendrepositoryUrl')]",
+        //         "branch": "[parameters('backendbranch')]",
+        //         "isManualIntegration": false,
+        //         "deploymentRollbackEnabled": true,
+        //         "isMercurial": false,
+        //         "isGitHubAction": true,
+        //         "githubActionConfiguration": {
+        //             "githubPersonalAccessToken": "[parameters('backendgithubToken')]"
+        //         }
+        //     }
+        // },
         // Postgress db
         {
             "type": "Microsoft.DBforPostgreSQL/flexibleServers",
