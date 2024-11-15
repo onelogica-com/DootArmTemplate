@@ -38,7 +38,7 @@
         },
         "repositoryUrl": {
             "type": "string",
-            "defaultValue": "https://github.com/onelogica-com/dootbotcode",
+            "defaultValue": "https://github.com/anshu1058/dootbotcode",
             "metadata": {
                 "description": "The GitHub repository URL"
             }
@@ -73,7 +73,7 @@
         },
         "serverrepositoryUrl": {
             "type": "string",
-            "defaultValue": "https://github.com/onelogica-com/dootserver",
+            "defaultValue": "https://github.com/anshu1058/dootbotserver",
             "metadata": {
                 "description": "The GitHub repository URL of frontend server"
             }
@@ -108,7 +108,7 @@
         },
         "backendrepositoryUrl": {
             "type": "string",
-            "defaultValue": "https://github.com/onelogica-com/bankbot",
+            "defaultValue": "https://github.com/anshu1058/bankbot",
             "metadata": {
                 "description": "The GitHub backend repository URL"
             }
