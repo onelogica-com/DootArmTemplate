@@ -51,7 +51,7 @@
             }
         },
         "branch": {
-            "defaultValue": "master",
+            "defaultValue": "main",
             "type": "string",
             "metadata": {
                 "description": "The branch in the repository to deploy from"
@@ -86,7 +86,7 @@
         //     }
         // },
         "serverbranch": {
-            "defaultValue": "master",
+            "defaultValue": "main",
             "type": "string",
             "metadata": {
                 "description": "The branch in the repository to deploy from"
@@ -121,7 +121,7 @@
         //     }
         // },
         "backendbranch": {
-            "defaultValue": "rabc_enabled_bot",
+            "defaultValue": "main",
             "type": "string",
             "metadata": {
                 "description": "The branch in the repository to deploy from"
