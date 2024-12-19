@@ -485,6 +485,7 @@
                 "publicAccess": "none"
             }
         },
+        // ServerFarms
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2023-12-01",
@@ -585,7 +586,7 @@
                         },
                         {
                             "name": "openai_name",
-                            "value": "parameters('openAiName')"
+                            "value": "[parameters('openAiName')]"
                         },
                         {
                             "name": "SEARCH_API_KEY",
@@ -593,7 +594,7 @@
                         },
                         {
                             "name": "SEARCH_SVC_NAME",
-                            "value": "parameters('searchServiceName'))]"
+                            "value": "[parameters('searchServiceName'))]"
                         },
                         {
                             "name": "DIRECTLINETOKEN",
@@ -710,6 +711,10 @@
                         {
                             "name": "MicrosoftAppPassword",
                             "value": "[parameters('secretKey')]"
+                        },
+                        {
+                            "name":"Database_Name",
+                            "value":"[parameters('postgresServerName')]"
                         },
                         {
                             "name": "Database_UserName",
